@@ -40,7 +40,7 @@
 - Ahi otro admin podra ver los cambios hechos en que archivos, y aceptara o rechazara la Pull Request
 
 
-###Para la organizacion
+### Para la organizacion
 
 - Al momento de crear la Isuue de inmediato aparece en la visualizacion del proyecto
 - Ahi se puede mover dependiendo de la categoria a la que pertenece para tener clara cuales deben **revisarse** aún
