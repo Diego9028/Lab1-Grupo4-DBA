@@ -1,4 +1,4 @@
 package delivery.demo.Repositories;
 
-public class CalificationRepository {
+public class CalificacionRepository {
 }
