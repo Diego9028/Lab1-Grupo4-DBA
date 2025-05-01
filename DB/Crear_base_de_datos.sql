@@ -17,7 +17,7 @@ CREATE TABLE DETALLE_PEDIDO
 (
   id_detalle_pedido INT NOT NULL,
   entregado BOOLEAN NOT NULL,
-  hora_entrega TIME NOT NULL,
+  hora_entrega TIMESTAMP,
   PRIMARY KEY (id_detalle_pedido)
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE PRODUCTO_SERVICIO
 CREATE TABLE PEDIDO
 (
   id_pedido INT NOT NULL,
-  hora_pedido TIME NOT NULL,
+  hora_pedido TIMESTAMP NOT NULL,
   id_urgencia INT NOT NULL,
   id_detalle_pedido INT NOT NULL,
   id_repartidor INT NOT NULL,
@@ -99,3 +99,18 @@ CREATE TABLE PEDIDO_PRODUCTO
   FOREIGN KEY (id_pedido) REFERENCES PEDIDO(id_pedido),
   FOREIGN KEY (id_producto_servicio) REFERENCES PRODUCTO_SERVICIO(id_producto_servicio)
 );
+
+CREATE OR REPLACE FUNCTION set_hora_entrega()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.entregado = TRUE AND OLD.entregado = FALSE THEN
+    NEW.hora_entrega := CURRENT_TIMESTAMP;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_hora_entrega
+BEFORE UPDATE ON DETALLE_PEDIDO
+FOR EACH ROW
+EXECUTE FUNCTION set_hora_entrega();
