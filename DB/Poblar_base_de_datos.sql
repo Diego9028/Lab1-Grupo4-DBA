@@ -69,7 +69,7 @@ INSERT INTO URGENCIA (id_urgencia, tipo) VALUES
 (3, 'Baja');
 
 -- DETALLE_PEDIDO
-INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, fecha_entrega) VALUES
+INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, hora_entrega) VALUES
 (1, TRUE, '2024-03-01 10:00:00'),
 (2, FALSE, '2024-03-02 15:30:00'),
 (3, TRUE, '2024-03-03 11:15:00'),
@@ -77,7 +77,7 @@ INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, fecha_entrega) VALUES
 (5, FALSE, '2024-03-05 13:20:00');
 
 -- PEDIDO
-INSERT INTO PEDIDO (id_pedido, fecha_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
+INSERT INTO PEDIDO (id_pedido, hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
 (1, '2024-03-01 09:00:00', 1, 1, 1, 1, 1),
 (2, '2024-03-02 14:00:00', 2, 2, 2, 2, 2),
 (3, '2024-03-03 10:30:00', 3, 3, 3, 3, 3),
