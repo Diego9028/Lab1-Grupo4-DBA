@@ -1,13 +1,17 @@
 package delivery.demo.repositories;
 
 import delivery.demo.entities.ClienteEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Repository
-
-public class ClienteRepository {
+public interface ClienteRepository extends JpaRepository<ClienteEntity, Long> {
 
     @Query(value = """
         SELECT 
@@ -25,7 +29,15 @@ public class ClienteRepository {
         ORDER BY totalGastado DESC
         LIMIT 1
         """, nativeQuery = true)
-    public ClienteEntity findClienteQueMasGasto() {
-        return null;
-    }
+    ClienteEntity findClienteQueMasGasto();
+
+    @Query(value = "SELECT c FROM ClienteEntity c JOIN PedidoEntity p ON c.id = p.idCliente JOIN DetallePedidoEntity dp ON p.idDetallePedido = dp.id JOIN PedidoProductoEntity pp ON p.id = pp.id JOIN ProductoServivioEntity ps ON pp.idProductoServicio = ps.id WHERE dp.entregado = TRUE GROUP BY c.id, c.direccion, c.correo ORDER BY SUM(ps.precio * pp.cantidad) DESC")
+    ClienteEntity findClienteQueMasGasto_2();
+
+    @Query("SELECT c FROM ClienteEntity c WHERE c.correo =:correo")
+    Optional<ClienteEntity> findByCorreo(@Param("correo") String correo);
+
+    @Query("SELECT c FROM ClienteEntity c")
+    List<ClienteEntity> findAllClientes();
+
 }

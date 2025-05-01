@@ -13,6 +13,6 @@ public class ClienteService {
     ClienteRepository clienteRepository;
 
     public ClienteEntity obtenerClienteConMasGasto() {
-        return clienteRepository.findClienteQueMasGasto();
+        return clienteRepository.findClienteQueMasGasto_2();
     }
 }
