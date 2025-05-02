@@ -18,6 +18,7 @@ CREATE TABLE DETALLE_PEDIDO
   id_detalle_pedido INT NOT NULL,
   entregado BOOLEAN NOT NULL,
   hora_entrega TIMESTAMP,
+  calificacion NUMERIC(4,2),
   PRIMARY KEY (id_detalle_pedido)
 );
 
@@ -80,14 +81,18 @@ CREATE TABLE PEDIDO
   FOREIGN KEY (id_medio_pago) REFERENCES MEDIO_PAGO(id_medio_pago)
 );
 
-CREATE TABLE CALIFICACION
-(
-  id_calificacion INT NOT NULL,
-  puntuacion INT NOT NULL,
-  id_repartidor INT NOT NULL,
+CREATE TABLE CALIFICACION (
+  id_calificacion INT  NOT NULL,
+  total_puntos    INT  NOT NULL,
+  total_pedidos   INT  NOT NULL,
+  promedio        NUMERIC(4,2) NOT NULL,
+  id_repartidor   INT  NOT NULL,
   PRIMARY KEY (id_calificacion),
-  FOREIGN KEY (id_repartidor) REFERENCES REPARTIDOR(id_repartidor)
+  UNIQUE (id_repartidor),          
+  FOREIGN KEY (id_repartidor)
+      REFERENCES REPARTIDOR(id_repartidor)
 );
+
 
 -- Tabla de relación entre pedidos y productos/servicios
 CREATE TABLE PEDIDO_PRODUCTO
@@ -114,3 +119,125 @@ CREATE TRIGGER trigger_hora_entrega
 BEFORE UPDATE ON DETALLE_PEDIDO
 FOR EACH ROW
 EXECUTE FUNCTION set_hora_entrega();
+
+
+
+CREATE OR REPLACE FUNCTION fn_actualizar_promedio_repartidor()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_repartidor INT;
+  v_delta      INT;
+BEGIN
+  /* ⚙️ 1. Averiguar qué repartidor entregó el pedido */
+  SELECT p.id_repartidor
+  INTO   v_repartidor
+  FROM   PEDIDO p
+  WHERE  p.id_detalle_pedido = NEW.id_detalle_pedido;
+
+  IF v_repartidor IS NULL THEN
+    RAISE EXCEPTION 'Pedido no encontrado para detalle %', NEW.id_detalle_pedido;
+  END IF;
+
+  /* ⚙️ 2. INSERT / UPDATE según el caso ----------------------------- */
+
+  IF TG_OP = 'INSERT' THEN
+    -- Inserción de calificación NUEVA (NEW.calificacion ya ≠ NULL)
+    INSERT INTO CALIFICACION (id_repartidor, total_puntos, total_pedidos, promedio)
+    VALUES (v_repartidor,
+            NEW.calificacion,
+            1,
+            NEW.calificacion::NUMERIC)
+    ON CONFLICT (id_repartidor) DO
+      UPDATE
+      SET total_puntos  = CALIFICACION.total_puntos  + EXCLUDED.total_puntos,
+          total_pedidos = CALIFICACION.total_pedidos + 1,
+          promedio      = (CALIFICACION.total_puntos  + EXCLUDED.total_puntos)::NUMERIC
+                          / (CALIFICACION.total_pedidos + 1);
+
+  ELSIF TG_OP = 'UPDATE' THEN
+    /* Solo actuamos si la calificación cambió */
+    IF NEW.calificacion IS DISTINCT FROM OLD.calificacion THEN
+      v_delta := NEW.calificacion - COALESCE(OLD.calificacion, 0);
+
+      UPDATE CALIFICACION
+      SET total_puntos  = total_puntos + v_delta,
+          -- si era NULL y ahora tiene nota sumamos pedido; si se borró restamos
+          total_pedidos = total_pedidos
+                          + CASE
+                              WHEN OLD.calificacion IS NULL AND NEW.calificacion IS NOT NULL THEN 1
+                              WHEN OLD.calificacion IS NOT NULL AND NEW.calificacion IS NULL THEN -1
+                              ELSE 0
+                            END,
+          promedio      = CASE
+                            WHEN total_pedidos + CASE
+                                   WHEN OLD.calificacion IS NULL AND NEW.calificacion IS NOT NULL THEN 1
+                                   WHEN OLD.calificacion IS NOT NULL AND NEW.calificacion IS NULL THEN -1
+                                   ELSE 0
+                                 END > 0
+                            THEN (total_puntos + v_delta)::NUMERIC
+                                 / (total_pedidos
+                                    + CASE
+                                        WHEN OLD.calificacion IS NULL AND NEW.calificacion IS NOT NULL THEN 1
+                                        WHEN OLD.calificacion IS NOT NULL AND NEW.calificacion IS NULL THEN -1
+                                        ELSE 0
+                                      END)
+                            ELSE NULL        -- nunca debería quedar en cero, salvo borrado masivo
+                          END
+      WHERE id_repartidor = v_repartidor;
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+/*  Se dispara cuando INSERTAS la calificación del pedido  */
+CREATE TRIGGER trg_calif_insert
+AFTER INSERT ON DETALLE_PEDIDO
+FOR EACH ROW
+WHEN (NEW.calificacion IS NOT NULL)
+EXECUTE FUNCTION fn_actualizar_promedio_repartidor();
+
+
+/*  …y cuando cambias o anulas esa calificación             */
+CREATE TRIGGER trg_calif_update
+AFTER UPDATE OF calificacion ON DETALLE_PEDIDO
+FOR EACH ROW
+EXECUTE FUNCTION fn_actualizar_promedio_repartidor();
+
+
+
+CREATE OR REPLACE FUNCTION fn_calif_retraso_48h()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_hora_pedido TIMESTAMP;
+BEGIN
+  /* ①  Obtener la hora en que se hizo el pedido */
+  SELECT hora_pedido
+  INTO   v_hora_pedido
+  FROM   PEDIDO
+  WHERE  id_detalle_pedido = NEW.id_detalle_pedido;
+
+  /* ②  Si existe el pedido y se cumplen las reglas, forzamos calificación = 1 */
+  IF v_hora_pedido IS NOT NULL                                   -- asegura coincidencia
+     AND NEW.entregado = TRUE                                     -- solo si está entregado
+     AND NEW.calificacion IS NULL                                 -- aún sin nota
+     AND NEW.hora_entrega IS NOT NULL                             -- hora registrada
+     AND NEW.hora_entrega >= v_hora_pedido + INTERVAL '48 hours'  -- retraso ≥ 48 h
+  THEN
+     NEW.calificacion := 1;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_calif_retraso_48h
+BEFORE UPDATE OF hora_entrega ON DETALLE_PEDIDO
+FOR EACH ROW
+EXECUTE FUNCTION fn_calif_retraso_48h();
+
+
