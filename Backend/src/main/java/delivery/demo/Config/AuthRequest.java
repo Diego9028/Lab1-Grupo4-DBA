@@ -1,7 +1,7 @@
 package delivery.demo.Config;
 
-public record RegisterRequest (
-        String name,
+public record AuthRequest(
         String email,
         String password
-) { }
+) {
+}

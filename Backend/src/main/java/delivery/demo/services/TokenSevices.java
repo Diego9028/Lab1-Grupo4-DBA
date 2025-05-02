@@ -1,8 +1,8 @@
 package delivery.demo.services;
 
-import delivery.demo.config.LoginRequest;
-import delivery.demo.config.RegisterRequest;
-import delivery.demo.config.TokenResponse;
+import delivery.demo.Config.LoginRequest;
+import delivery.demo.Config.RegisterRequest;
+import delivery.demo.Config.TokenResponse;
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.entities.TokenEntity;
 import delivery.demo.repositories.ClienteRepository;
@@ -57,7 +57,7 @@ public class TokenSevices {
         return new TokenResponse(jwtToken, refreshToken);
     }
 
-    private void saveClienteToken(final ClienteEntity cliente, final String jwtToken) {
+    public void saveClienteToken(final ClienteEntity cliente, final String jwtToken) {
         var token = TokenEntity.builder()
                 .cliente(cliente)
                 .token(jwtToken)

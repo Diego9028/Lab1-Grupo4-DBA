@@ -1,4 +1,4 @@
-package delivery.demo.config;
+package delivery.demo.Config;
 
 public record LoginRequest (
     String email,
