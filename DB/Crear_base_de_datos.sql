@@ -105,6 +105,9 @@ CREATE TABLE PEDIDO_PRODUCTO
   FOREIGN KEY (id_producto_servicio) REFERENCES PRODUCTO_SERVICIO(id_producto_servicio)
 );
 
+
+
+
 CREATE OR REPLACE FUNCTION set_hora_entrega()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -115,7 +118,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_hora_entrega
+CREATE TRIGGER a_trigger_hora_entrega
 BEFORE UPDATE ON DETALLE_PEDIDO
 FOR EACH ROW
 EXECUTE FUNCTION set_hora_entrega();
@@ -236,7 +239,7 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER trg_calif_retraso_48h
-BEFORE UPDATE OF hora_entrega ON DETALLE_PEDIDO
+BEFORE UPDATE ON DETALLE_PEDIDO
 FOR EACH ROW
 EXECUTE FUNCTION fn_calif_retraso_48h();
 
