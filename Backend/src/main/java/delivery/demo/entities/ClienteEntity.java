@@ -10,16 +10,13 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "cliente" , uniqueConstraints = {
-@UniqueConstraint(columnNames = "nombre"),
-@UniqueConstraint(columnNames = "direccion"),
-@UniqueConstraint(columnNames = "correo")
-})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "clientes")
 public class ClienteEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,9 +28,10 @@ public class ClienteEntity {
     private String direccion;
 
     @Email
-    @Column(name = "correo", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String correo;
 
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)

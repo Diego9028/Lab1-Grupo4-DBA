@@ -1,4 +1,4 @@
-package delivery.demo.Config;
+package delivery.demo.config;
 
 public record RegisterRequest (
         String name,

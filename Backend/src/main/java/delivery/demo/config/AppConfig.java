@@ -1,4 +1,4 @@
-package delivery.demo.Config;
+package delivery.demo.config;
 
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.repositories.ClienteRepository;

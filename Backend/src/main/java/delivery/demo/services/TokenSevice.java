@@ -1,8 +1,8 @@
 package delivery.demo.services;
 
-import delivery.demo.Config.LoginRequest;
-import delivery.demo.Config.RegisterRequest;
-import delivery.demo.Config.TokenResponse;
+import delivery.demo.config.LoginRequest;
+import delivery.demo.config.RegisterRequest;
+import delivery.demo.config.TokenResponse;
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.entities.TokenEntity;
 import delivery.demo.repositories.ClienteRepository;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TokenSevices {
+public class TokenSevice {
 
     private final ClienteRepository clienteRepository;
     private final TokenRepository tokenRepository;

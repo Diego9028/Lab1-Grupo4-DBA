@@ -1,4 +1,4 @@
-package delivery.demo.Config;
+package delivery.demo.config;
 
 import delivery.demo.repositories.TokenRepository;
 import delivery.demo.entities.TokenEntity;
@@ -46,10 +46,10 @@ public class SecurityConfig {
                 .logout(logout ->
                         logout.logoutUrl("/auth/logout")
                                 .addLogoutHandler(this::logout)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                                .logoutSuccessHandler((request, response, authentication) ->
+                                        SecurityContextHolder.clearContext())
                 )
         ;
-
         return http.build();
     }
 
@@ -60,7 +60,7 @@ public class SecurityConfig {
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+            throw new IllegalArgumentException("invalid token");
         }
 
         final String jwt = authHeader.substring(7);

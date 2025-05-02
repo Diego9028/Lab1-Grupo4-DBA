@@ -1,5 +1,6 @@
-package delivery.demo.Config;
+package delivery.demo.config;
 
+import delivery.demo.entities.TokenEntity;
 import delivery.demo.repositories.TokenRepository;
 import delivery.demo.services.JwtService;
 import delivery.demo.entities.ClienteEntity;
@@ -30,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-    private final ClienteRepository userRepository;
+    private final ClienteRepository clienteRepository;
 
     @Override
     protected void doFilterInternal(
@@ -38,7 +39,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
+        //Con esto se indica que solo se ejecute para peticions que sean "/auth"
+        //Si no es así, ntonces que se ejecute lo que sigue, osea que cambia de filtro o lo que sea que se haga luego
+        if (request.getServletPath().contains("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -64,7 +67,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
         if (isTokenExpiredOrRevoked) {
-            final Optional<ClienteEntity> user = userRepository.findByCorreo(userEmail);
+            final Optional<ClienteEntity> user = clienteRepository.findByCorreo(userEmail);
 
             if (user.isPresent()) {
                 final boolean isTokenValid = jwtService.isTokenValid(jwt, user.get());
@@ -82,7 +85,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }

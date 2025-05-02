@@ -1,4 +1,4 @@
-package delivery.demo.Config;
+package delivery.demo.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
