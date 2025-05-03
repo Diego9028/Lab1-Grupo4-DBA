@@ -6,18 +6,24 @@ import delivery.demo.services.TokenSevice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/clientes")
 @CrossOrigin
 @RequiredArgsConstructor
 public class ClienteController {
 
     ClienteService clienteService;
-    private final TokenSevice tokenSevice;
 
     @GetMapping("/con-mas-gasto")
     public ClienteEntity obtenerClienteConMasGasto() {
         return clienteService.obtenerClienteConMasGasto();
+    }
+
+    @GetMapping("/")
+    public List<ClienteEntity> obtenerClientes() {
+        return clienteService.obtenerClientes();
     }
 
 
