@@ -2,7 +2,6 @@ package delivery.demo.services;
 
 import delivery.demo.entities.ClienteEntity;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.Date;
 import java.util.Map;
 
@@ -20,10 +18,10 @@ public class JwtService {
     @Value("${delivery.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${delivery.security.jwt.expiration}")
+    @Value("${delivery.security.jwt.expiration-time}")
     private Long jwtExpiration;
 
-    @Value("${delivery.security.jwt.refresh-token.expiration}")
+    @Value("${delivery.security.jwt.refresh-token-expiration-time}")
     private Long refreshExpiration;
 
     public String generateToken(final ClienteEntity cliente) {
