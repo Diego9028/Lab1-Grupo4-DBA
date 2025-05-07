@@ -1,15 +1,19 @@
 package delivery.demo.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
 @Entity
 @Table(name = "pedido")
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class PedidoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,18 +23,5 @@ public class PedidoEntity {
     private Long idDetallePedido;
     private Long idRepartidor;
     private Long idCliente;
-    private String idMedioPago;
-
-    public PedidoEntity() {
-
-    }
-
-    public PedidoEntity(Date fecha, Long idUrgencia, Long idDetallePedido, Long idRepartidor, Long idCliente, String idMedioPago) {
-        this.fecha = fecha;
-        this.idUrgencia = idUrgencia;
-        this.idDetallePedido = idDetallePedido;
-        this.idRepartidor = idRepartidor;
-        this.idCliente = idCliente;
-        this.idMedioPago = idMedioPago;
-    }
+    private Long idMedioPago;
 }

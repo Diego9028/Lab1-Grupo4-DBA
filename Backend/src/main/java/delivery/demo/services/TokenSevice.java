@@ -30,6 +30,7 @@ public class TokenSevice {
         var cliente = ClienteEntity.builder()
                 .nombre(request.name())
                 .correo(request.email())
+                .direccion(request.direccion())
                 .password(passwordEncoder.encode(request.password()))
                 .build();
         var savedCliente = clienteRepository.save(cliente);
