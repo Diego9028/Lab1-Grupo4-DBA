@@ -115,19 +115,10 @@ CREATE TABLE PEDIDO_PRODUCTO
 );
 
 
-
-CREATE TRIGGER notificar_error_pedido
-AFTER CREATE ON PEDIDO
-FOR EACH ROW
-EXECUTE PROCEDURE fn_notificar_error_pedido();
-
 CREATE OR REPLACE FUNCTION fn_notificar_error_pedido()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Verifica si el pedido tiene errores de tipo de datos
-  IF NEW.hora_pedido IS NULL THEN
-    RAISE EXCEPTION 'Error: La hora del pedido no puede ser NULL.';
-  END IF;
   IF NEW.hora_pedido IS NULL THEN
     RAISE EXCEPTION 'Error: La hora del pedido no puede ser NULL.';
   END IF;
@@ -151,18 +142,19 @@ BEGIN
   END IF;
 
   -- Verifica si el pedido tiene errores de lógica
-  IF NEW.hora_pedido < CURRENT_TIMESTAMP THEN
-    RAISE EXCEPTION 'Error: La hora del pedido no puede ser en el pasado.';
-  END IF;
-  IF NEW.hora_pedido > CURRENT_TIMESTAMP + INTERVAL '1 hour' THEN
-    RAISE EXCEPTION 'Error: La hora del pedido no puede ser más de una hora en el futuro.';
-  END IF;
   IF NEW.id_urgencia NOT IN (SELECT id_urgencia FROM URGENCIA) THEN
     RAISE EXCEPTION 'Error: La urgencia del pedido no es válida.';
   END IF;
   
+  RETURN NEW;
+  
 END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER notificar_error_pedido
+AFTER INSERT ON PEDIDO
+FOR EACH ROW
+EXECUTE PROCEDURE fn_notificar_error_pedido();
 
 
 CREATE OR REPLACE FUNCTION set_hora_entrega()
