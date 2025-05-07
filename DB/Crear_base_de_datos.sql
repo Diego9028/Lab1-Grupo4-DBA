@@ -93,6 +93,15 @@ CREATE TABLE CALIFICACION (
       REFERENCES REPARTIDOR(id_repartidor)
 );
 
+CREATE TABLE NOTIFICACION
+(
+  id_notificacion INT NOT NULL,
+  id_pedido INT NOT NULL,
+  mensaje VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id_notificacion),
+  FOREIGN KEY (id_pedido) REFERENCES PEDIDO(id_pedido)
+);
+
 
 -- Tabla de relación entre pedidos y productos/servicios
 CREATE TABLE PEDIDO_PRODUCTO
@@ -105,6 +114,54 @@ CREATE TABLE PEDIDO_PRODUCTO
   FOREIGN KEY (id_producto_servicio) REFERENCES PRODUCTO_SERVICIO(id_producto_servicio)
 );
 
+
+
+CREATE TRIGGER notificar_error_pedido
+AFTER CREATE ON PEDIDO
+FOR EACH ROW
+EXECUTE PROCEDURE fn_notificar_error_pedido();
+
+CREATE OR REPLACE FUNCTION fn_notificar_error_pedido()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Verifica si el pedido tiene errores de tipo de datos
+  IF NEW.hora_pedido IS NULL THEN
+    RAISE EXCEPTION 'Error: La hora del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.hora_pedido IS NULL THEN
+    RAISE EXCEPTION 'Error: La hora del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_urgencia IS NULL THEN
+    RAISE EXCEPTION 'Error: La urgencia del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_detalle_pedido IS NULL THEN
+    RAISE EXCEPTION 'Error: El detalle del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_repartidor IS NULL THEN
+    RAISE EXCEPTION 'Error: El repartidor del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_cliente IS NULL THEN
+    RAISE EXCEPTION 'Error: El cliente del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_medio_pago IS NULL THEN
+    RAISE EXCEPTION 'Error: El medio de pago del pedido no puede ser NULL.';
+  END IF;
+  IF NEW.id_pedido IS NULL THEN
+    RAISE EXCEPTION 'Error: El ID del pedido no puede ser NULL.';
+  END IF;
+
+  -- Verifica si el pedido tiene errores de lógica
+  IF NEW.hora_pedido < CURRENT_TIMESTAMP THEN
+    RAISE EXCEPTION 'Error: La hora del pedido no puede ser en el pasado.';
+  END IF;
+  IF NEW.hora_pedido > CURRENT_TIMESTAMP + INTERVAL '1 hour' THEN
+    RAISE EXCEPTION 'Error: La hora del pedido no puede ser más de una hora en el futuro.';
+  END IF;
+  IF NEW.id_urgencia NOT IN (SELECT id_urgencia FROM URGENCIA) THEN
+    RAISE EXCEPTION 'Error: La urgencia del pedido no es válida.';
+  END IF;
+  
+END;
 
 
 
@@ -242,5 +299,3 @@ CREATE TRIGGER trg_calif_retraso_48h
 BEFORE UPDATE ON DETALLE_PEDIDO
 FOR EACH ROW
 EXECUTE FUNCTION fn_calif_retraso_48h();
-
-
