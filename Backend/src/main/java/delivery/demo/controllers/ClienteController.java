@@ -2,19 +2,20 @@ package delivery.demo.controllers;
 
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.services.ClienteService;
-import delivery.demo.services.TokenSevice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/cliente")
 @CrossOrigin
 @RequiredArgsConstructor
 public class ClienteController {
 
-    ClienteService clienteService;
+    @Autowired
+    private final ClienteService clienteService;
 
     @GetMapping("/con-mas-gasto")
     public ClienteEntity obtenerClienteConMasGasto() {

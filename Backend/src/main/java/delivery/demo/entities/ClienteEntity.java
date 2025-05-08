@@ -1,5 +1,6 @@
 package delivery.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "clientes")
+@Table(name = "cliente")
 public class ClienteEntity {
 
     @Id
@@ -35,5 +36,6 @@ public class ClienteEntity {
     private String password;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<TokenEntity> tokens;
 }
