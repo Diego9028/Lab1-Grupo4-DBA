@@ -26,6 +26,4 @@ public class ClienteController {
     public List<ClienteEntity> obtenerClientes() {
         return clienteService.obtenerClientes();
     }
-
-
 }

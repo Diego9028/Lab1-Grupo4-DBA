@@ -1,17 +1,34 @@
 <template>
   <div>
-    <h1>Bienvenido al Home</h1>
-    <router-link to="/login" class="btn btn-primary">Iniciar Sesión</router-link>
-    <router-link to="/register" class="btn btn-secondary">Registrarse</router-link>
-    <button @click="handleLogout" class="btn btn-danger">Cerrar Sesión</button>
+    <header>
+      <h1>Mi Aplicación</h1>
+      <nav>
+        <nuxt-link to="/" class="btn btn-link">Inicio</nuxt-link>
+        <nuxt-link to="/login" class="btn btn-link">Iniciar Sesión</nuxt-link>
+        <nuxt-link to="/register" class="btn btn-link">Registrarse</nuxt-link>
+        <nuxt-link to="/cliente" class="btn btn-link">Clientes</nuxt-link>
+      </nav>
+    </header>
+    <main>
+      <nuxt-page />
+    </main>
+    <footer>
+      <p>© 2025 Mi Aplicación</p>
+    </footer>
   </div>
 </template>
 
+
 <script setup>
-import { handleLogout } from './components/Login.vue'
-definePageMeta({
-  middleware: 'auth'
-})
+import { handleLogout } from './src/services/authService'
+import { useNuxtApp } from '#app'
+import { useRouter } from 'vue-router'
+
+const { $apiClient } = useNuxtApp()
+const router = useRouter()
+
+const logoutUser = async () => {
+  await handleLogout($apiClient, router)
+}
+
 </script>
-
-

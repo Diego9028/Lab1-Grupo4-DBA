@@ -1,0 +1,118 @@
+:root {
+    --background-color: #1e1e2f;
+    --primary-color: #8b0000;
+    --secondary-color: #4b0082;
+    --text-color: #ffffff;
+    --accent-color: #ff4500;
+    --hover-color: #ff6347;
+    --border-color: #2e2e3e;
+    --optional-color: #353561;
+    --text-optional-color: #c1d96b;
+  }
+  
+  body {
+    margin: 0;
+    font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .title {
+    color: var(--text-optional-color);
+  }
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: var(--hover-color);
+  }
+  
+  h1, h2, h3 {
+    color: var(--accent-color);
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: var(--hover-color);
+    border-color: var(--accent-color);
+  }
+  
+  button:focus, button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+  
+  hr {
+    border: 1px solid var(--border-color);
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .table th, .table td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .table th {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: var(--optional-color);
+  }
+  
+  .table tr:hover {
+    background-color: var(--hover-color);
+  }
+  
+  @media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
+  
+    a:hover {
+      color: #747bff;
+    }
+  
+    button {
+      background-color: #f9f9f9;
+    }
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
