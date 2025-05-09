@@ -18,12 +18,14 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @GetMapping("/con-mas-gasto")
-    public ClienteEntity obtenerClienteConMasGasto() {
-        return clienteService.obtenerClienteConMasGasto();
+    public Long obtenerClienteConMasGasto() {
+        return clienteService.idClienteTopGasto();
     }
 
     @GetMapping("/")
     public List<ClienteEntity> obtenerClientes() {
         return clienteService.obtenerClientes();
     }
+
+
 }

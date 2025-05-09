@@ -61,9 +61,9 @@ public class AppConfig {
     //configuracion con la base de datos
     @Bean
     public Sql2o sql2o(
-            @Value("${spring.datasource.url}") String dbUrl,
-            @Value("${spring.datasource.username}") String dbUser,
-            @Value("${spring.datasource.password}") String dbPass
+            @Value("jdbc:postgresql://localhost:5432/tbd") String dbUrl,
+            @Value("${DB_USER}") String dbUser,
+            @Value("${DB_PASSWORD}") String dbPass
     ) {
         return new Sql2o(dbUrl, dbUser, dbPass) {
             @Override
