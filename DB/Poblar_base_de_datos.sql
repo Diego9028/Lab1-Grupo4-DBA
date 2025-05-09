@@ -75,7 +75,12 @@ INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, hora_entrega, califica
 (2, FALSE, '2024-03-02 15:30:00', NULL),
 (3, TRUE,  '2024-03-03 11:15:00', NULL),
 (4, TRUE,  '2024-03-04 09:45:00', NULL),
-(5, FALSE, '2024-03-05 13:20:00', NULL);
+(5, FALSE, '2024-03-05 13:20:00', NULL),
+(11, TRUE,  '2025-05-07 11:00:00', NULL),
+(12, FALSE, '2025-05-07 14:30:00', NULL),
+(13, TRUE,  '2025-05-08 09:45:00', NULL),
+(14, TRUE,  '2025-05-08 17:20:00', NULL),
+(15, FALSE, '2025-05-09 12:10:00', NULL);
 
 -- PEDIDO
 INSERT INTO PEDIDO (id_pedido, hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
@@ -88,7 +93,12 @@ INSERT INTO PEDIDO (id_pedido, hora_pedido, id_urgencia, id_detalle_pedido, id_r
 (7, '2024-03-07 16:10:00', 1, 2, 7, 7, 3),
 (8, '2024-03-08 17:05:00', 2, 3, 8, 8, 4),
 (9, '2024-03-09 10:50:00', 3, 4, 9, 9, 1),
-(10, '2024-03-10 13:40:00', 1, 5, 10, 10, 2);
+(10, '2024-03-10 13:40:00', 1, 5, 10, 10, 2),
+(11, '2025-05-07 10:00:00', 1, 11, 1, 2, 1),
+(12, '2025-05-07 13:00:00', 2, 12, 2, 3, 2),
+(13, '2025-05-08 08:30:00', 3, 13, 3, 4, 3),
+(14, '2025-05-08 16:00:00', 1, 14, 4, 5, 4),
+(15, '2025-05-09 11:00:00', 2, 15, 5, 1, 1);
 
 -- CALIFICACION
 INSERT INTO CALIFICACION (
@@ -122,7 +132,13 @@ INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
 (7, 9, 1),
 (8, 10, 2),
 (9, 1, 1),
-(10, 2, 3);
+(10, 2, 3),
+(11, 3, 2),
+(11, 6, 1),
+(12, 4, 1),
+(13, 5, 3),
+(14, 7, 1),
+(15, 10, 4);
 
 
 

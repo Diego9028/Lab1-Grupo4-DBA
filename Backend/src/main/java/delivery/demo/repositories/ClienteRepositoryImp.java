@@ -18,7 +18,7 @@ public class ClienteRepositoryImp {
         String sql = """
         SELECT 
           c.id
-        FROM CLIENTES c
+        FROM CLIENTE c
         JOIN PEDIDO p ON c.id = p.id_cliente
         JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
         JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
