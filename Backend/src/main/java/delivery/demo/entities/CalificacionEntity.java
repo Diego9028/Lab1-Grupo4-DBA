@@ -12,14 +12,14 @@ public class CalificacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int puntuacion;
+    private int total_puntos;
     private Long idRepartidor;
 
     public CalificacionEntity() {
     }
 
-    public CalificacionEntity(int puntuacion, Long idRepartidor) {
-        this.puntuacion = puntuacion;
+    public CalificacionEntity(int total_puntos, Long idRepartidor) {
+        this.total_puntos = total_puntos;
         this.idRepartidor = idRepartidor;
     }
 }
