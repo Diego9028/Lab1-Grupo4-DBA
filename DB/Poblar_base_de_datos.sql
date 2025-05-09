@@ -1,17 +1,18 @@
 -- Población grande para las tablas
 
 -- CLIENTE
-INSERT INTO CLIENTE (id_cliente, direccion, correo) VALUES
-(1, 'Calle A, Murcia', 'cliente1@example.com'),
-(2, 'Calle B, Cartagena', 'cliente2@example.com'),
-(3, 'Avenida C, Lorca', 'cliente3@example.com'),
-(4, 'Calle D, Molina de Segura', 'cliente4@example.com'),
-(5, 'Plaza E, Alcantarilla', 'cliente5@example.com'),
-(6, 'Calle F, San Javier', 'cliente6@example.com'),
-(7, 'Avenida G, Totana', 'cliente7@example.com'),
-(8, 'Calle H, Águilas', 'cliente8@example.com'),
-(9, 'Calle I, Cehegín', 'cliente9@example.com'),
-(10, 'Avenida J, Cieza', 'cliente10@example.com');
+-- CLIENTE
+INSERT INTO CLIENTE (nombre, direccion, correo, password) VALUES
+('Antonio Torres', 'Calle A, Murcia', 'cliente1@example.com', 'password1'),
+('Laura Sánchez', 'Calle B, Cartagena', 'cliente2@example.com', 'password2'),
+('José Martínez', 'Avenida C, Lorca', 'cliente3@example.com', 'password3'),
+('Elena Ruiz', 'Calle D, Molina de Segura', 'cliente4@example.com', 'password4'),
+('Carlos López', 'Plaza E, Alcantarilla', 'cliente5@example.com', 'password5'),
+('María Gómez', 'Calle F, San Javier', 'cliente6@example.com', 'password6'),
+('Miguel Díaz', 'Avenida G, Totana', 'cliente7@example.com', 'password7'),
+('Sara Romero', 'Calle H, Águilas', 'cliente8@example.com', 'password8'),
+('David Navarro', 'Calle I, Cehegín', 'cliente9@example.com', 'password9'),
+('Lucía Ortega', 'Avenida J, Cieza', 'cliente10@example.com', 'password10');
 
 -- EMPRESA_ASOCIADA
 INSERT INTO EMPRESA_ASOCIADA (id_empresa_asociada, nombre) VALUES
@@ -69,12 +70,12 @@ INSERT INTO URGENCIA (id_urgencia, tipo) VALUES
 (3, 'Baja');
 
 -- DETALLE_PEDIDO
-INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, hora_entrega) VALUES
-(1, TRUE, '2024-03-01 10:00:00'),
-(2, FALSE, '2024-03-02 15:30:00'),
-(3, TRUE, '2024-03-03 11:15:00'),
-(4, TRUE, '2024-03-04 09:45:00'),
-(5, FALSE, '2024-03-05 13:20:00');
+INSERT INTO DETALLE_PEDIDO (id_detalle_pedido, entregado, hora_entrega, calificacion) VALUES
+(1, TRUE,  '2024-03-01 10:00:00', NULL),
+(2, FALSE, '2024-03-02 15:30:00', NULL),
+(3, TRUE,  '2024-03-03 11:15:00', NULL),
+(4, TRUE,  '2024-03-04 09:45:00', NULL),
+(5, FALSE, '2024-03-05 13:20:00', NULL);
 
 -- PEDIDO
 INSERT INTO PEDIDO (id_pedido, hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
@@ -90,17 +91,23 @@ INSERT INTO PEDIDO (id_pedido, hora_pedido, id_urgencia, id_detalle_pedido, id_r
 (10, '2024-03-10 13:40:00', 1, 5, 10, 10, 2);
 
 -- CALIFICACION
-INSERT INTO CALIFICACION (id_calificacion, puntuacion, id_repartidor) VALUES
-(1, 5, 1),
-(2, 4, 2),
-(3, 3, 3),
-(4, 5, 4),
-(5, 2, 5),
-(6, 4, 6),
-(7, 1, 7),
-(8, 5, 8),
-(9, 3, 9),
-(10, 4, 10);
+INSERT INTO CALIFICACION (
+  id_calificacion,
+  total_puntos,
+  total_pedidos,
+  promedio,
+  id_repartidor
+) VALUES
+(1,  5, 1, 5.00, 1),
+(2,  4, 2, 2.00, 2),
+(3,  3, 3, 1.00, 3),
+(4,  5, 4, 1.25, 4),
+(5,  2, 5, 0.40, 5),
+(6,  4, 6, 0.67, 6),
+(7,  1, 7, 0.14, 7),
+(8,  5, 8, 0.63, 8),
+(9,  3, 9, 0.33, 9),
+(10, 4,10, 0.40, 10);
 
 -- PEDIDO_PRODUCTO
 INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
@@ -116,3 +123,13 @@ INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
 (8, 10, 2),
 (9, 1, 1),
 (10, 2, 3);
+
+
+
+UPDATE DETALLE_PEDIDO
+SET    calificacion = CASE id_detalle_pedido
+                        WHEN 1 THEN 1
+                        WHEN 3 THEN 3
+                        WHEN 4 THEN 4
+                      END
+WHERE  id_detalle_pedido IN (1,3,4);
