@@ -37,6 +37,7 @@ public class PedidoRepositoryImp {
         }
     }
 
+    //4 Calcular el tiempo promedio entre pedido y entrega por repartidor.
     public List<Map<String, Object>> obtenerTiemposPromedioEntrega() {
         String sql = """
         SELECT 

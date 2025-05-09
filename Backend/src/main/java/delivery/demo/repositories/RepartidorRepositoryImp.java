@@ -15,6 +15,7 @@ public class RepartidorRepositoryImp {
         this.sql2o = sql2o;
     }
 
+    //5 Obtener los 3 repartidores con mejor rendimiento (por entregas y promedio de calificación).
     public List<Map<String, Object>> obtenerTop3Repartidores() {
         String sql = """
             SELECT
