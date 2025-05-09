@@ -15,4 +15,8 @@ public class PedidoService {
     public List<Map<String, Object>> obtenerMasPedidosPorCategoriaUltimoMes() {
         return pedidoRepositoryImp.obtenerMasPedidosPorCategoriaUltimoMes();
     }
+
+    public List<Map<String, Object>> obtenerTiemposPromedioEntrega() {
+        return pedidoRepositoryImp.obtenerTiemposPromedioEntrega();
+    }
 }

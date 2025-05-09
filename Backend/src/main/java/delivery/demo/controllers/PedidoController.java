@@ -24,5 +24,10 @@ public class PedidoController {
     public List<Map<String, Object>> obtenerMasPedidosPorCategoriaUltimoMes() {
         return pedidoService.obtenerMasPedidosPorCategoriaUltimoMes();
     }
+
+    @GetMapping("/tiempos-promedio-entrega")
+    public List<Map<String, Object>> obtenerTiemposPromedioEntrega() {
+        return pedidoService.obtenerTiemposPromedioEntrega();
+    }
 }
 

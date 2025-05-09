@@ -36,4 +36,32 @@ public class PedidoRepositoryImp {
                     .asList(); // Devuelve una lista de filas como Map<String, Object>
         }
     }
+
+    public List<Map<String, Object>> obtenerTiemposPromedioEntrega() {
+        String sql = """
+        SELECT 
+          r.id_repartidor,
+          r.nombre,
+          AVG(EXTRACT(EPOCH FROM (d.hora_entrega - p.hora_pedido))) AS tiempo_promedio_entrega
+        FROM 
+          PEDIDO p
+        JOIN 
+          DETALLE_PEDIDO d ON p.id_detalle_pedido = d.id_detalle_pedido
+        JOIN 
+          REPARTIDOR r ON p.id_repartidor = r.id_repartidor
+        WHERE 
+          d.entregado = TRUE
+        GROUP BY 
+          r.id_repartidor, r.nombre
+        ORDER BY 
+          tiempo_promedio_entrega
+    """;
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetchTable()
+                    .asList();
+        }
+    }
+
 }
