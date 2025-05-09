@@ -22,6 +22,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNuxtApp } from '#app'
 import API_ROUTES from '../src/api-routes.js'
+import { handleLogout } from '../src/services/authService.ts'
 
 const email = ref('')
 const password = ref('')
@@ -30,11 +31,22 @@ const { $apiClient } = useNuxtApp()
 
 const handleLogin = async () => {
     try {
-        const response = await apiClient.post(API_ROUTES.LOGIN, {
+        const response = await $apiClient.post(API_ROUTES.LOGIN, {
             email: email.value,
             password: password.value
         })
-        localStorage.setItem('token', response.data.token) // Guardar el token en localStorage
+
+        const access_token = response.data.access_token // Obtener el token de la respuesta
+        const refresh_token = response.data.refresh_token // Obtener el token de la respuesta
+
+        if (!access_token || !refresh_token) {
+            alert('Error: Token no recibido')
+            return
+        }
+        localStorage.setItem('access_token', access_token)
+        localStorage.setItem('refresh_token', refresh_token)
+        console.log('Token guardado (de acceso):', access_token)
+        console.log('Token guardado(de refresco):', refresh_token)
         router.push('/') // Redirigir a la página principal
     } catch (error) {
         console.error('Error:', error)
@@ -42,39 +54,25 @@ const handleLogin = async () => {
     }
 }
 
-const handleLogout = async () => {
+const refreshToken = async () => {
     try {
-        const token = localStorage.getItem('token')
-        if (!token) {
+        const refresh_token = localStorage.getItem('refresh_token')
+        if (!refresh_token) {
             alert('No estás autenticado.')
             return
         }
-
-        await apiClient.post(API_ROUTES.LOGOUT, null, {
+        const response = await $apiClient.post(API_ROUTES.REFRESH_TOKEN, null, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${refresh_token}`
             }
         })
-
-        // Limpiar el token del almacenamiento local
-        localStorage.removeItem('token')
-        alert('Sesión cerrada exitosamente.')
-        router.push('/login') // Redirigir al login
-    } catch (error) {
-        console.error('Error al cerrar sesión:', error)
-        alert('Error al cerrar sesión.')
-    }
-}
-
-const refreshToken = async () => {
-    try {
-        const token = localStorage.getItem('token')
-        const response = await apiClient.post(API_ROUTES.REFRESH_TOKEN, null, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        localStorage.setItem('token', response.data.token) // Actualizar el token en localStorage
+        const new_access_token = response.data.access_token // Obtener el nuevo token de acceso de la respuesta
+        if (!new_access_token) {
+            alert('Error: Token no recibido')
+            return
+        }
+        localStorage.setItem('access_token', new_access_token) // Actualizar el token en localStorage
+        console.log('Token de acceso renovado:', new_access_token)
     } catch (error) {
         console.error('Error al renoval el token:', error)
     }

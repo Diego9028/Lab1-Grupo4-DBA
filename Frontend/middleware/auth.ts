@@ -3,8 +3,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
         console.warn('localStorage no está disponible en el servidor.')
         return
     }
-    const token = localStorage.getItem('token')
-    if (!token && to.path !== '/login' && to.path !== '/register') {
+    const access_token = localStorage.getItem('access_token')
+    if (!access_token && to.path !== '/login' && to.path !== '/register') {
       return navigateTo('/login')
     }
   })

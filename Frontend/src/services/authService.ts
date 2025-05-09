@@ -3,25 +3,27 @@ import type { AxiosInstance } from 'axios'
 import type { Router } from 'vue-router'
 
 export const handleLogout = async (apiClient: AxiosInstance, router: Router) => {
-    try {
-        if(typeof window === 'undefined') {
-            console.warn('localStorage no está disponible en el servidor.')
-            return
-        }
-        const token = localStorage.getItem('token')
-    if (!token) {
+  try {
+    if (typeof window === 'undefined') {
+      console.warn('localStorage no está disponible en el servidor.')
+      return
+    }
+    const access_token = localStorage.getItem('access_token')
+
+    if (!access_token) {
       alert('No estás autenticado.')
       return
     }
 
     await apiClient.post(API_ROUTES.LOGOUT, null, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${access_token}`
       }
     })
 
     // Limpiar el token del almacenamiento local
-    localStorage.removeItem('token')
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
     alert('Sesión cerrada exitosamente.')
     router.push('/login') // Redirigir al login
   } catch (error) {

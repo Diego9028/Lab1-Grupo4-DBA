@@ -25,16 +25,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useNuxtApp } from '#app'
+import API_ROUTES from '../src/api-routes.js'
 
 const clientes = ref([])
 const { $apiClient } = useNuxtApp()
 
 const fetchClientes = async () => {
     try {
-        const response = await apiClient.get('/cliente/')
+        const response = await $apiClient.get(API_ROUTES.CLIENTE + '/')
         clientes.value = response.data
     } catch (error) {
         console.error('Error al obtener clientes:', error)
+        console.log(error.response?.data?.message || 'Error al obtener clientes')
         alert('No se pudieron cargar los clientes.')
     }
 }

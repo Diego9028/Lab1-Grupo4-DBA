@@ -1,6 +1,6 @@
 const API_ROUTES = {
     LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
+    REGISTER: '/auth/registrar',
     REFRESH_TOKEN: '/auth/refresh-token',
     LOGOUT: '/auth/logout',
     CLIENTE: '/cliente'

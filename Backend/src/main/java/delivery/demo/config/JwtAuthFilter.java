@@ -1,6 +1,5 @@
 package delivery.demo.config;
 
-import delivery.demo.entities.TokenEntity;
 import delivery.demo.repositories.TokenRepository;
 import delivery.demo.services.JwtService;
 import delivery.demo.entities.ClienteEntity;
