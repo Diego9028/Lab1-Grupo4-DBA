@@ -23,7 +23,7 @@ public class ClienteService {
     }
 
     public List<ClienteEntity> obtenerClientes() {
-        return clienteRepository.findAllClientes();
+        return clienteRepositoryImp.findAllClientes();
     }
 
     public Long idClienteTopGasto() {

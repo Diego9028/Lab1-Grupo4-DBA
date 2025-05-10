@@ -1,11 +1,9 @@
 package delivery.demo.repositories;
 
 import delivery.demo.entities.ClienteEntity;
-import delivery.demo.entities.TokenEntity;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,7 +81,20 @@ public class ClienteRepositoryImp {
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
-                    .executeAndFetch(ClienteEntity.class);
+                    .executeAndFetchTable()
+                    .asList()
+                    .stream()
+                    .map(row -> {
+                        ClienteEntity c = new ClienteEntity();
+                        c.setId(((Number) row.get("id_cliente")).longValue());
+                        c.setNombre((String) row.get("nombre"));
+                        c.setDireccion((String) row.get("direccion"));
+                        c.setCorreo((String) row.get("correo"));
+                        c.setPassword((String) row.get("password"));
+                        return c;
+                    })
+                    .toList();
         }
     }
 }
+
