@@ -23,12 +23,12 @@ import org.sql2o.Sql2o;
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepositoryImp;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            final ClienteEntity cliente = clienteRepository.findByCorreo(username)
+            final ClienteEntity cliente = clienteRepositoryImp.findByCorreo(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Cliente not found"));
             return org.springframework.security.core.userdetails.User
                     .builder()
