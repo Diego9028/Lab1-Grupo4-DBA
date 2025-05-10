@@ -30,6 +30,45 @@ RETURN _id_pedido;
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION cambiar_estado_pedido(
+    _id_pedido BIGINT,
+    _nuevo_estado BOOLEAN
+) RETURNS BOOLEAN AS $$
+DECLARE
+_id_detalle BIGINT;
+    _estado_actual BOOLEAN;
+BEGIN
+    -- Obtener el id_detalle_pedido y el estado actual
+SELECT p.id_detalle_pedido, dp.entregado
+INTO _id_detalle, _estado_actual
+FROM pedido p
+         JOIN detalle_pedido dp ON p.id_detalle_pedido = dp.id_detalle_pedido
+WHERE p.id_pedido = _id_pedido;
+
+-- Validar que el pedido existe
+IF _id_detalle IS NULL THEN
+        RAISE EXCEPTION 'Pedido con ID % no encontrado', _id_pedido;
+END IF;
+
+    -- Validar que no se está intentando cambiar al mismo estado
+    IF _estado_actual = _nuevo_estado THEN
+        RAISE NOTICE 'El pedido ya está en el estado solicitado';
+RETURN FALSE;
+END IF;
+
+    -- Validar transición lógica (no se puede marcar como no entregado después de entregado)
+    IF _estado_actual = TRUE AND _nuevo_estado = FALSE THEN
+        RAISE EXCEPTION 'No se puede cambiar un pedido entregado a no entregado';
+END IF;
+
+    -- Actualizar el estado del pedido
+UPDATE detalle_pedido
+SET entregado = _nuevo_estado
+WHERE id_detalle_pedido = _id_detalle;
+
+RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION confirmar_pedido(_id_pedido BIGINT)
 RETURNS VOID AS $$

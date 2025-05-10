@@ -54,4 +54,13 @@ public class PedidoService {
         jdbc.query(sql, params, rs -> null);
     }
 
+    public boolean cambiarEstadoPedidoPorFuncion(Long idPedido, boolean nuevoEstado) {
+        String sql = "SELECT cambiar_estado_pedido(:id, :estado)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", idPedido)
+                .addValue("estado", nuevoEstado);
+
+        return jdbc.queryForObject(sql, params, Boolean.class);
+    }
 }

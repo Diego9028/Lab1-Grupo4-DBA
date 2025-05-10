@@ -58,6 +58,13 @@ public class PedidoController {
         return ResponseEntity.ok("Pedido confirmado");
     }
 
+    @PostMapping("/cambiar-estado")
+    public ResponseEntity<Long> cambiarEstado(@RequestBody Map<String, Object> body) {
+        Long idPedido = ((Number) body.get("idPedido")).longValue();
+        boolean nuevoEstado = (boolean) body.get("nuevoEstado");
 
+        boolean resultado = pedidoService.cambiarEstadoPedidoPorFuncion(idPedido, nuevoEstado);
+
+        return ResponseEntity.ok(resultado ? idPedido : -1L);
+    }   
 }
-
