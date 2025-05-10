@@ -16,4 +16,8 @@ public class RepartidorService {
     public List<Map<String, Object>> obtenerTop3Repartidores() {
         return repartidorRepositoryImp.obtenerTop3Repartidores();
     }
+
+    public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
+        return repartidorRepositoryImp.obtenerDesempenoPorRepartidor();
+    }
 }

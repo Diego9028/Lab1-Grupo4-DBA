@@ -46,4 +46,28 @@ public class RepartidorRepositoryImp {
                     .asList();
         }
     }
+
+    //Desempeño por repartidor
+    public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
+        String sql = """
+        SELECT\s
+          r.id_repartidor,
+          r.nombre,
+          c.total_puntos,
+          c.total_pedidos,
+          c.promedio
+        FROM\s
+          REPARTIDOR r
+        JOIN\s
+          CALIFICACION c ON r.id_repartidor = c.id_repartidor
+        ORDER BY\s
+          c.total_puntos DESC;
+    """;
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetchTable()
+                    .asList();
+        }
+    }
 }

@@ -22,4 +22,9 @@ public class RepartidorController {
     public List<Map<String, Object>> obtenerTop3Repartidores() {
         return repartidorService.obtenerTop3Repartidores();
     }
+
+    @GetMapping("/desempenios")
+    public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
+        return repartidorService.obtenerDesempenoPorRepartidor();
+    }
 }
