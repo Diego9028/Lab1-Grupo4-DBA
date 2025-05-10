@@ -29,3 +29,54 @@ END LOOP;
 RETURN _id_pedido;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION confirmar_pedido(_id_pedido BIGINT)
+RETURNS VOID AS $$
+DECLARE
+rec          RECORD;
+    v_detalle_id BIGINT;
+BEGIN
+    -- 1) Verificar existencia y no confirmado … (sin cambios)
+SELECT id_detalle_pedido
+INTO   v_detalle_id
+FROM   pedido
+WHERE  id_pedido = _id_pedido;
+
+IF NOT FOUND THEN
+        RAISE EXCEPTION 'Pedido % no existe', _id_pedido;
+END IF;
+
+    IF EXISTS (SELECT 1 FROM detalle_pedido
+               WHERE id_detalle_pedido = v_detalle_id
+                 AND entregado = TRUE) THEN
+        RAISE EXCEPTION 'Pedido % ya fue entregado', _id_pedido;
+END IF;
+
+    -- 2) Recorrer SOLO productos físicos
+FOR rec IN
+SELECT pp.id_producto_servicio,
+       pp.cantidad,
+       ps.stock
+FROM   pedido_producto pp
+           JOIN   producto_servicio ps USING (id_producto_servicio)
+WHERE  pp.id_pedido = _id_pedido
+  AND  ps.es_producto = TRUE          -- ← ★ solo productos
+    LOOP
+        IF rec.stock < rec.cantidad THEN
+            RAISE EXCEPTION
+              'Stock insuficiente para producto %, disponible %, requerido %',
+              rec.id_producto_servicio, rec.stock, rec.cantidad;
+END IF;
+
+UPDATE producto_servicio
+SET    stock = stock - rec.cantidad
+WHERE  id_producto_servicio = rec.id_producto_servicio;
+END LOOP;
+
+    -- 3) Marcar detalle como entregado (trigger fija hora_entrega)
+UPDATE detalle_pedido
+SET    entregado = TRUE
+WHERE  id_detalle_pedido = v_detalle_id;
+END;
+$$ LANGUAGE plpgsql;

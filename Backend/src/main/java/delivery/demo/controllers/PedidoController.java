@@ -51,5 +51,13 @@ public class PedidoController {
         return ResponseEntity.ok(idPedido);
     }
 
+    @PostMapping("/confirmar")
+    public ResponseEntity<String> confirmarPedido(@RequestBody Map<String, Object> body) {
+        Long idPedido = ((Number) body.get("idPedido")).longValue();
+        pedidoService.confirmarPedido(idPedido);
+        return ResponseEntity.ok("Pedido confirmado");
+    }
+
+
 }
 

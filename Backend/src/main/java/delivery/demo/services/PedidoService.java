@@ -48,4 +48,10 @@ public class PedidoService {
         return jdbc.queryForObject(sql, params, Long.class);
     }
 
+    public void confirmarPedido(Long idPedido) {
+        String sql = "SELECT confirmar_pedido(:id)";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", idPedido);
+        jdbc.query(sql, params, rs -> null);
+    }
+
 }
