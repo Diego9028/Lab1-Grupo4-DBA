@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import delivery.demo.repositories.ClienteRepositoryImp;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 
@@ -18,8 +19,8 @@ public class ClienteService {
     @Autowired
     ClienteRepositoryImp clienteRepositoryImp;
 
-    public ClienteEntity obtenerClienteConMasGasto() {
-        return clienteRepository.findClienteQueMasGasto_2();
+    public Map<String, Object> obtenerClienteConMasGasto() {
+        return clienteRepositoryImp.findClienteQueMasGasto();
     }
 
     public List<ClienteEntity> obtenerClientes() {
