@@ -1,13 +1,12 @@
 package delivery.demo.controllers;
 
+import delivery.demo.services.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import delivery.demo.services.PedidoService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +27,18 @@ public class PedidoController {
     @GetMapping("/tiempos-promedio-entrega")
     public List<Map<String, Object>> obtenerTiemposPromedioEntrega() {
         return pedidoService.obtenerTiemposPromedioEntrega();
+    }
+
+    @PostMapping("/crear")
+    public ResponseEntity<Long> crearPedido(@RequestBody Map<String, Object> body) {
+        Long idUrgencia   = ((Number) body.get("idUrgencia")).longValue();
+        Long idRepartidor = ((Number) body.get("idRepartidor")).longValue();
+        Long idCliente    = ((Number) body.get("idCliente")).longValue();
+        Long idMedioPago  = ((Number) body.get("idMedioPago")).longValue();
+
+        Long idPedido = pedidoService.registrarPedidoPorFuncion(idUrgencia, idRepartidor, idCliente, idMedioPago);
+
+        return ResponseEntity.ok(idPedido);
     }
 }
 

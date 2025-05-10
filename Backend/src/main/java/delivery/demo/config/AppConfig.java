@@ -63,8 +63,8 @@ public class AppConfig {
     @Bean
     public Sql2o sql2o(
             @Value("jdbc:postgresql://localhost:5432/tbd") String dbUrl,
-            @Value("${DB_USER}") String dbUser,
-            @Value("${DB_PASSWORD}") String dbPass
+            @Value("postgres") String dbUser,
+            @Value("grupo4") String dbPass
     ) {
         return new Sql2o(dbUrl, dbUser, dbPass) {
             @Override
