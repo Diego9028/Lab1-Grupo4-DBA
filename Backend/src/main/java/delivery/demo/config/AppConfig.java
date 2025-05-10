@@ -2,6 +2,7 @@ package delivery.demo.config;
 
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.repositories.ClienteRepository;
+import delivery.demo.repositories.ClienteRepositoryImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,12 +24,12 @@ import org.sql2o.Sql2o;
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final ClienteRepository clienteRepositoryImp;
+    private final ClienteRepository clienteRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            final ClienteEntity cliente = clienteRepositoryImp.findByCorreo(username)
+            final ClienteEntity cliente = clienteRepository.findByCorreo(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Cliente not found"));
             return org.springframework.security.core.userdetails.User
                     .builder()

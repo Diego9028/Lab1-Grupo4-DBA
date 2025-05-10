@@ -65,14 +65,14 @@ public class ClienteRepositoryImp {
         }
     }
 
-    public ClienteEntity findByCorreo(String correo) {
+    public Optional<ClienteEntity> findByCorreo(String correo) {
         String sql = "SELECT * FROM CLIENTE WHERE correo = :correo";
 
         try (Connection con = sql2o.open()) {
             ClienteEntity cliente = con.createQuery(sql)
                     .addParameter("correo", correo)
                     .executeAndFetchFirst(ClienteEntity.class);
-            return cliente;
+            return Optional.ofNullable(cliente);
         }
     }
 
