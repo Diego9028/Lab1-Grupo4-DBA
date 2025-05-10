@@ -59,6 +59,7 @@ CREATE TABLE PRODUCTO_SERVICIO
   precio DECIMAL(10,2) NOT NULL,
   id_categoria INT NOT NULL,
   id_empresa_asociada INT NOT NULL,
+  es_producto BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (id_producto_servicio),
   FOREIGN KEY (id_categoria) REFERENCES CATEGORIA(id_categoria),
   FOREIGN KEY (id_empresa_asociada) REFERENCES EMPRESA_ASOCIADA(id_empresa_asociada)

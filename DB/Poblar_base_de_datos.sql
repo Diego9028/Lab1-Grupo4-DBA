@@ -44,17 +44,19 @@ INSERT INTO REPARTIDOR (id_repartidor, nombre, id_empresa_asociada) VALUES
 (10, 'Elena Navarro', 5);
 
 -- PRODUCTO_SERVICIO
-INSERT INTO PRODUCTO_SERVICIO (id_producto_servicio, stock, precio, id_categoria, id_empresa_asociada) VALUES
-(1, 50, 25.99, 1, 1),
-(2, 40, 199.99, 2, 2),
-(3, 100, 15.00, 3, 3),
-(4, 20, 89.50, 4, 4),
-(5, 70, 12.75, 5, 5),
-(6, 60, 9.99, 1, 1),
-(7, 80, 150.00, 2, 2),
-(8, 30, 45.25, 3, 3),
-(9, 90, 30.00, 4, 4),
-(10, 100, 8.00, 5, 5);
+INSERT INTO PRODUCTO_SERVICIO (id_producto_servicio, stock, precio, id_categoria, id_empresa_asociada, es_producto) VALUES
+(1,  50,  25.99, 1, 1, TRUE),
+(2,  40, 199.99, 2, 2, TRUE),
+(3, 100,  15.00, 3, 3, TRUE),
+(4,  20,  89.50, 4, 4, TRUE),
+(5,  70,  12.75, 5, 5, TRUE),
+(6,  60,   9.99, 1, 1, TRUE),
+(7,  80, 150.00, 2, 2, TRUE),
+(8,  30,  45.25, 3, 3, TRUE),
+(9,  90,  30.00, 4, 4, TRUE),
+(10,100,   8.00, 5, 5, TRUE),
+(11, 0, 120.00, 2, 2, FALSE);  
+
 
 -- MEDIO_PAGO
 INSERT INTO MEDIO_PAGO (id_medio_pago, tipo) VALUES
