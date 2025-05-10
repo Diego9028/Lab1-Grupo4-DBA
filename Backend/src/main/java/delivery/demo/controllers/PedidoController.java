@@ -36,9 +36,20 @@ public class PedidoController {
         Long idCliente    = ((Number) body.get("idCliente")).longValue();
         Long idMedioPago  = ((Number) body.get("idMedioPago")).longValue();
 
-        Long idPedido = pedidoService.registrarPedidoPorFuncion(idUrgencia, idRepartidor, idCliente, idMedioPago);
+        @SuppressWarnings("unchecked")
+        List<Number> productosRaw = (List<Number>) body.get("productos");
+        List<Long> productos = productosRaw.stream().map(Number::longValue).toList();
+
+        @SuppressWarnings("unchecked")
+        List<Number> cantidadesRaw = (List<Number>) body.get("cantidades");
+        List<Integer> cantidades = cantidadesRaw.stream().map(Number::intValue).toList();
+
+        Long idPedido = pedidoService.registrarPedidoConProductos(
+                idUrgencia, idRepartidor, idCliente, idMedioPago, productos, cantidades
+        );
 
         return ResponseEntity.ok(idPedido);
     }
+
 }
 
