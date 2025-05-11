@@ -17,23 +17,41 @@ public class ClienteRepositoryImp {
         this.sql2o = sql2o;
     }
 
-    public Optional<Long> obtenerClienteConMasGasto() {
+    public ClienteEntity obtenerClienteConMasGasto() {
         String sql = """
         SELECT 
-          c.id
+          c.id_cliente,
+          c.nombre,
+          c.direccion,
+          c.correo,
+          c.password
         FROM CLIENTE c
-        JOIN PEDIDO p ON c.id = p.id_cliente
+        JOIN PEDIDO p ON c.id_cliente = p.id_cliente
         JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
         JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
         JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
         WHERE dp.entregado = TRUE
-        GROUP BY c.id
+        GROUP BY c.id_cliente, c.nombre, c.direccion, c.correo, c.password
         ORDER BY SUM(ps.precio * pp.cantidad) DESC
         LIMIT 1
     """;
-        try (Connection conn = sql2o.open()) {
-            return Optional.ofNullable(conn.createQuery(sql)
-                    .executeScalar(Long.class));
+
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetchTable()
+                    .asList()
+                    .stream()
+                    .findFirst()
+                    .map(row -> {
+                        ClienteEntity c = new ClienteEntity();
+                        c.setId(((Number) row.get("id_cliente")).longValue());
+                        c.setNombre((String) row.get("nombre"));
+                        c.setDireccion((String) row.get("direccion"));
+                        c.setCorreo((String) row.get("correo"));
+                        c.setPassword((String) row.get("password"));
+                        return c;
+                    })
+                    .orElse(null);
         }
     }
 

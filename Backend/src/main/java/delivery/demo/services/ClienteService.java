@@ -27,8 +27,7 @@ public class ClienteService {
         return clienteRepositoryImp.findAllClientes();
     }
 
-    public Long idClienteTopGasto() {
-        return clienteRepositoryImp.obtenerClienteConMasGasto()
-                .orElseThrow(() -> new RuntimeException("No se encontró ningún cliente"));
+    public ClienteEntity idClienteTopGasto() {
+        return clienteRepositoryImp.obtenerClienteConMasGasto();
     }
 }
