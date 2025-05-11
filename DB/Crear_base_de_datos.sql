@@ -114,6 +114,15 @@ CREATE TABLE PEDIDO_PRODUCTO
   FOREIGN KEY (id_producto_servicio) REFERENCES PRODUCTO_SERVICIO(id_producto_servicio)
 );
 
+CREATE TABLE TOKEN_ENTITY (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    token_type VARCHAR(50) NOT NULL,
+    revoked BOOLEAN NOT NULL,
+    expired BOOLEAN NOT NULL,
+    cliente_id BIGINT REFERENCES CLIENTE(id_cliente)
+);
+
 
 CREATE OR REPLACE FUNCTION fn_notificar_error_pedido()
 RETURNS TRIGGER AS $$
