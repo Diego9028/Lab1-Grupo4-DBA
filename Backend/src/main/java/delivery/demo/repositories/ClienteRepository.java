@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ClienteRepository {
 
-    Optional<Long> obtenerClienteConMasGasto();
+    ClienteEntity obtenerClienteConMasGasto();
 
     Map<String, Object> findClienteQueMasGasto();
 

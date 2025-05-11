@@ -24,7 +24,6 @@ public class SqlFunctionLoader implements ApplicationRunner {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Funciones cargadas correctamente.");
         } catch (Exception e) {
             System.err.println("Error al ejecutar funciones SQL: " + e.getMessage());
             throw e;

@@ -8,11 +8,12 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductoServivioEntity {
+public class ProductoServicioEntity {
     private Long id;
 
     private int stock;
     private float precio;
     private Long idCategoria;
     private Long idEmpresaAsociada;
+    private Boolean es_producto;
 }

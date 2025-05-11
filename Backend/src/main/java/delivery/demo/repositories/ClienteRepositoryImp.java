@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,44 +21,61 @@ public class ClienteRepositoryImp implements ClienteRepository {
     }
 
     @Override
-    public Optional<Long> obtenerClienteConMasGasto() {
+    public ClienteEntity obtenerClienteConMasGasto() {
         String sql = """
-        SELECT 
-          c.id
-        FROM CLIENTE c
-        JOIN PEDIDO p ON c.id = p.id_cliente
-        JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
-        JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
-        JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
-        WHERE dp.entregado = TRUE
-        GROUP BY c.id
-        ORDER BY SUM(ps.precio * pp.cantidad) DESC
-        LIMIT 1
-    """;
-        try (Connection conn = sql2o.open()) {
-            return Optional.ofNullable(conn.createQuery(sql)
-                    .executeScalar(Long.class));
+                    SELECT 
+                      c.id_cliente,
+                      c.nombre,
+                      c.direccion,
+                      c.correo,
+                      c.password
+                    FROM CLIENTE c
+                    JOIN PEDIDO p ON c.id_cliente = p.id_cliente
+                    JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
+                    JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
+                    JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
+                    WHERE dp.entregado = TRUE
+                    GROUP BY c.id_cliente, c.nombre, c.direccion, c.correo, c.password
+                    ORDER BY SUM(ps.precio * pp.cantidad) DESC
+                    LIMIT 1
+                """;
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetchTable()
+                    .asList()
+                    .stream()
+                    .findFirst()
+                    .map(row -> {
+                        ClienteEntity c = new ClienteEntity();
+                        c.setId_cliente(((Number) row.get("id_cliente")).longValue());
+                        c.setNombre((String) row.get("nombre"));
+                        c.setDireccion((String) row.get("direccion"));
+                        c.setCorreo((String) row.get("correo"));
+                        c.setPassword((String) row.get("password"));
+                        return c;
+                    })
+                    .orElse(null);
         }
     }
 
     @Override
     public Map<String, Object> findClienteQueMasGasto() {
         String sql = """
-        SELECT 
-            c.id_cliente AS "idCliente",
-            c.direccion AS "direccion",
-            c.correo AS "correo",
-            SUM(ps.precio * pp.cantidad) AS "totalGastado"
-        FROM CLIENTE c
-        JOIN PEDIDO p ON c.id_cliente = p.id_cliente
-        JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
-        JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
-        JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
-        WHERE dp.entregado = TRUE
-        GROUP BY c.id_cliente, c.direccion, c.correo
-        ORDER BY totalGastado DESC
-        LIMIT 1
-    """;
+                    SELECT 
+                        c.id_cliente AS "idCliente",
+                        c.direccion AS "direccion",
+                        c.correo AS "correo",
+                        SUM(ps.precio * pp.cantidad) AS "totalGastado"
+                    FROM CLIENTE c
+                    JOIN PEDIDO p ON c.id_cliente = p.id_cliente
+                    JOIN DETALLE_PEDIDO dp ON p.id_detalle_pedido = dp.id_detalle_pedido
+                    JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
+                    JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
+                    WHERE dp.entregado = TRUE
+                    GROUP BY c.id_cliente, c.direccion, c.correo
+                    ORDER BY totalGastado DESC
+                    LIMIT 1
+                """;
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -97,10 +115,10 @@ public class ClienteRepositoryImp implements ClienteRepository {
     @Override
     public ClienteEntity save(ClienteEntity cliente) {
         String sql = """
-            INSERT INTO CLIENTE (nombre, direccion, correo, password)
-        VALUES (:nombre, :direccion, :correo, :password)
-        RETURNING id_cliente
-    """;
+                        INSERT INTO CLIENTE (nombre, direccion, correo, password)
+                    VALUES (:nombre, :direccion, :correo, :password)
+                    RETURNING id_cliente
+                """;
 
         try (Connection con = sql2o.open()) {
             Long id = con.createQuery(sql)
