@@ -21,4 +21,8 @@ public class EmpresaAsociadaController {
     public List<Map<String, Object>> obtenerEntregasFallidasPorEmpresa(){
         return empresaAsociadaService.obtenerEntregasFallidasPorEmpresa();
     }
+    @GetMapping("/top-volumen")
+    public List<Map<String, Object>> obtenerEmpresasConMasEntregas() {
+        return empresaAsociadaService.obtenerEntregasExitosasPorEmpresa();
+    }
 }

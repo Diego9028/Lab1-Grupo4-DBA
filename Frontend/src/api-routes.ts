@@ -4,7 +4,8 @@ const API_ROUTES = {
     REFRESH_TOKEN: '/auth/refresh-token',
     LOGOUT: '/auth/logout',
     CLIENTE: '/cliente',
-    DESEMPENO: '/repartidor/desempenios'
+    DESEMPENO: '/repartidor/desempenios',
+    EMPRESA: '/empresaAsociada'
   }
   
   export default API_ROUTES
