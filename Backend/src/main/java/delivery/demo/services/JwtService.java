@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -42,7 +43,7 @@ public class JwtService {
 
     private String buildToken(final ClienteEntity cliente, final Long expiration) {
         return Jwts.builder()
-                .id(cliente.getId().toString())
+                .id(cliente.getId_cliente().toString())
                 .claims(Map.of("name", cliente.getNombre()))
                 .setSubject(cliente.getCorreo())
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -53,6 +54,12 @@ public class JwtService {
 
     private SecretKey getSignInKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+
+    public boolean isTokenValid(final String token, final UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public boolean isTokenValid(final String token , final ClienteEntity cliente) {

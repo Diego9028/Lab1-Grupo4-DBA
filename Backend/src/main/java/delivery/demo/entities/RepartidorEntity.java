@@ -1,26 +1,16 @@
 package delivery.demo.entities;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "repartidor")
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class RepartidorEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nombre;
+
     private Long idEmpresaAsociada;
-
-    public RepartidorEntity() {
-
-    }
-
-    public RepartidorEntity(String nombre, Long idEmpresaAsociada) {
-        this.nombre = nombre;
-        this.idEmpresaAsociada = idEmpresaAsociada;
-    }
 }

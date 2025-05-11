@@ -1,28 +1,19 @@
 package delivery.demo.entities;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
-@Entity
-@Table(name = "detalle_pedido")
 @Data
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class DetallePedidoEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private boolean entregado;
     private Date fecha;
 
-    public DetallePedidoEntity() {
-
-    }
-
-    public DetallePedidoEntity(boolean entregado, Date fecha) {
-        this.entregado = entregado;
-        this.fecha = fecha;
-    }
 }

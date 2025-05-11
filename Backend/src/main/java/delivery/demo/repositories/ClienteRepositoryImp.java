@@ -1,6 +1,7 @@
 package delivery.demo.repositories;
 
 import delivery.demo.entities.ClienteEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -9,14 +10,16 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ClienteRepositoryImp {
+public class ClienteRepositoryImp implements ClienteRepository {
 
+    @Autowired
     private final Sql2o sql2o;
 
     public ClienteRepositoryImp(Sql2o sql2o) {
         this.sql2o = sql2o;
     }
 
+    @Override
     public Optional<Long> obtenerClienteConMasGasto() {
         String sql = """
         SELECT 
@@ -37,6 +40,7 @@ public class ClienteRepositoryImp {
         }
     }
 
+    @Override
     public Map<String, Object> findClienteQueMasGasto() {
         String sql = """
         SELECT 
@@ -65,6 +69,7 @@ public class ClienteRepositoryImp {
         }
     }
 
+    @Override
     public Optional<ClienteEntity> findByCorreo(String correo) {
         String sql = "SELECT * FROM CLIENTE WHERE correo = :correo";
 
@@ -73,28 +78,41 @@ public class ClienteRepositoryImp {
                     .addParameter("correo", correo)
                     .executeAndFetchFirst(ClienteEntity.class);
             return Optional.ofNullable(cliente);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 
+    @Override
     public List<ClienteEntity> findAllClientes() {
         String sql = "SELECT * FROM CLIENTE";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
-                    .executeAndFetchTable()
-                    .asList()
-                    .stream()
-                    .map(row -> {
-                        ClienteEntity c = new ClienteEntity();
-                        c.setId(((Number) row.get("id_cliente")).longValue());
-                        c.setNombre((String) row.get("nombre"));
-                        c.setDireccion((String) row.get("direccion"));
-                        c.setCorreo((String) row.get("correo"));
-                        c.setPassword((String) row.get("password"));
-                        return c;
-                    })
-                    .toList();
+                    .executeAndFetch(ClienteEntity.class);
+        }
+    }
+
+    @Override
+    public ClienteEntity save(ClienteEntity cliente) {
+        String sql = """
+            INSERT INTO CLIENTE (nombre, direccion, correo, password)
+        VALUES (:nombre, :direccion, :correo, :password)
+        RETURNING id_cliente
+    """;
+
+        try (Connection con = sql2o.open()) {
+            Long id = con.createQuery(sql)
+                    .addParameter("nombre", cliente.getNombre())
+                    .addParameter("direccion", cliente.getDireccion())
+                    .addParameter("correo", cliente.getCorreo())
+                    .addParameter("password", cliente.getPassword())
+                    .executeUpdate()
+                    .getKey(Long.class);
+
+            cliente.setId_cliente(id);
+            return cliente;
         }
     }
 }
-

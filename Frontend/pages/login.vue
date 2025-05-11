@@ -45,8 +45,6 @@ const handleLogin = async () => {
         }
         localStorage.setItem('access_token', access_token)
         localStorage.setItem('refresh_token', refresh_token)
-        console.log('Token guardado (de acceso):', access_token)
-        console.log('Token guardado(de refresco):', refresh_token)
         router.push('/') // Redirigir a la página principal
     } catch (error) {
         console.error('Error:', error)
@@ -72,7 +70,6 @@ const refreshToken = async () => {
             return
         }
         localStorage.setItem('access_token', new_access_token) // Actualizar el token en localStorage
-        console.log('Token de acceso renovado:', new_access_token)
     } catch (error) {
         console.error('Error al renoval el token:', error)
     }
