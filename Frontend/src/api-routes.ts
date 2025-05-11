@@ -3,7 +3,8 @@ const API_ROUTES = {
     REGISTER: '/auth/registrar',
     REFRESH_TOKEN: '/auth/refresh-token',
     LOGOUT: '/auth/logout',
-    CLIENTE: '/cliente'
+    CLIENTE: '/cliente',
+    DESEMPENO: '/repartidor/desempenios'
   }
   
   export default API_ROUTES

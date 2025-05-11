@@ -5,6 +5,7 @@
       <nuxt-link to="/login" class="btn btn-primary">Iniciar Sesión</nuxt-link>
       <nuxt-link to="/register" class="btn btn-secondary">Registrarse</nuxt-link>
       <nuxt-link to="/cliente" class="btn btn-info">Ver Clientes</nuxt-link>
+      <nuxt-link to="/desempeno" class="btn btn-info">Ver Desempeño</nuxt-link>
     </div>
   </template>
 
