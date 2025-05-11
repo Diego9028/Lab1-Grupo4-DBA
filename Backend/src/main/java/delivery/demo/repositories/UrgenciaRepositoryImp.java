@@ -36,7 +36,6 @@ public class UrgenciaRepositoryImp {
               cantidad_usos DESC
             LIMIT 1;
         """;
-
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .executeAndFetchTable()

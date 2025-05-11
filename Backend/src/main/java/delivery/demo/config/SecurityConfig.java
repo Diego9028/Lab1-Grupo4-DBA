@@ -1,7 +1,7 @@
 package delivery.demo.config;
 
-import delivery.demo.repositories.TokenRepository;
 import delivery.demo.entities.TokenEntity;
+import delivery.demo.repositories.TokenRepositoryImp;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final TokenRepository tokenRepository;
+    private final TokenRepositoryImp tokenRepositoryImp;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -45,7 +45,6 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -84,12 +83,12 @@ public class SecurityConfig {
         }
 
         final String jwt = authHeader.substring(7);
-        final TokenEntity storedToken = tokenRepository.findByToken(jwt)
+        final TokenEntity storedToken = tokenRepositoryImp.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
+            tokenRepositoryImp.save(storedToken);
             SecurityContextHolder.clearContext();
         }
     }

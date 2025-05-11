@@ -27,5 +27,12 @@ public class ClienteController {
         return clienteService.obtenerClientes();
     }
 
+    @GetMapping("/correo")
+    public ClienteEntity obtenerClientePorCorreo(@RequestParam String correo) {
+        return clienteService.findByCorreo(correo);
+    }
+
+
+
 
 }

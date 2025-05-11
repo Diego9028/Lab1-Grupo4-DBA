@@ -1,24 +1,14 @@
 package delivery.demo.entities;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "empresa_asociada")
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmpresaAsociadaEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nombre;
-
-    public EmpresaAsociadaEntity() {
-
-    }
-
-    public EmpresaAsociadaEntity(String nombre) {
-        this.nombre = nombre;
-    }
 }

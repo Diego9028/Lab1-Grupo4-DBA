@@ -5,12 +5,10 @@ import delivery.demo.config.RegisterRequest;
 import delivery.demo.config.TokenResponse;
 import delivery.demo.entities.ClienteEntity;
 import delivery.demo.entities.TokenEntity;
-import delivery.demo.repositories.ClienteRepository;
-import delivery.demo.repositories.TokenRepository;
+import delivery.demo.repositories.TokenRepositoryImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TokenSevice {
 
-    private final ClienteRepository clienteRepository;
-    private final TokenRepository tokenRepository;
+    private final ClienteService clienteService;
+    private final TokenRepositoryImp tokenRepositoryImp;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -33,7 +31,7 @@ public class TokenSevice {
                 .direccion(request.direccion())
                 .password(passwordEncoder.encode(request.password()))
                 .build();
-        var savedCliente = clienteRepository.save(cliente);
+        var savedCliente = clienteService.save(cliente);
         var jwtToken = jwtService.generateToken(cliente);
         var refreshToken = jwtService.generateRefreshToken(cliente);
         saveClienteToken(savedCliente, jwtToken);
@@ -47,8 +45,7 @@ public class TokenSevice {
                         request.password()
                 )
         );
-        var cliente = clienteRepository.findByCorreo(request.email())
-                .orElseThrow();
+        var cliente = clienteService.findByCorreo(request.email());
         var jwtToken = jwtService.generateToken(cliente);
         var refreshToken = jwtService.generateRefreshToken(cliente);
         // Con "revokeAllClienteTokens" se eliminan todos los tokens que tenia el cliente antes, pero
@@ -60,25 +57,25 @@ public class TokenSevice {
 
     public void saveClienteToken(final ClienteEntity cliente, final String jwtToken) {
         var token = TokenEntity.builder()
-                .cliente(cliente)
+                .cliente_id(cliente.getId_cliente())
                 .token(jwtToken)
-                .tokenType(TokenEntity.TokenType.BEARER)
+                .token_type(TokenEntity.TokenType.BEARER)
                 .revoked(false)
                 .expired(false)
                 .build();
-        tokenRepository.save(token);
+        tokenRepositoryImp.save(token);
     }
 
     private void revokeAllClienteTokens(final ClienteEntity cliente) {
-        final List<TokenEntity> validClienteTokens = tokenRepository
-                .findAllValidTokenByUser(cliente.getId());
+        final List<TokenEntity> validClienteTokens = tokenRepositoryImp
+                .findAllValidTokenByUser(cliente.getId_cliente());
         if (!validClienteTokens.isEmpty()) {
             validClienteTokens.forEach(t -> {
                 t.setExpired(true);
                 t.setRevoked(true);
             });
         }
-        tokenRepository.saveAll(validClienteTokens);
+        tokenRepositoryImp.saveAll(validClienteTokens);
     }
 
     public TokenResponse refreshToken(final String authHeader) {
@@ -90,8 +87,7 @@ public class TokenSevice {
         if (userEmail == null) {
             throw new IllegalArgumentException("Invalid Refresh Token");
         }
-        final ClienteEntity cliente = clienteRepository.findByCorreo(userEmail)
-                .orElseThrow( () -> new UsernameNotFoundException("Cliente): not found"));
+        final ClienteEntity cliente = clienteService.findByCorreo(userEmail);
         if (!jwtService.isTokenValid(refreshToken, cliente)) {
             throw new IllegalArgumentException("Invalid Refresh Token");
 
