@@ -3,8 +3,8 @@ CREATE OR REPLACE FUNCTION registrar_pedido(
     _id_repartidor   BIGINT,
     _id_cliente      BIGINT,
     _id_medio_pago   BIGINT,
-    _ids_prod        BIGINT[],   -- ← productos
-    _cant_prod       INT[]       -- ← cantidades
+    _ids_prod        BIGINT[],
+    _cant_prod       INT[]
 ) RETURNS BIGINT AS $$
 DECLARE
 _i          INT;
@@ -38,30 +38,29 @@ DECLARE
 _id_detalle BIGINT;
     _estado_actual BOOLEAN;
 BEGIN
-    -- Obtener el id_detalle_pedido y el estado actual
+
 SELECT p.id_detalle_pedido, dp.entregado
 INTO _id_detalle, _estado_actual
 FROM pedido p
          JOIN detalle_pedido dp ON p.id_detalle_pedido = dp.id_detalle_pedido
 WHERE p.id_pedido = _id_pedido;
 
--- Validar que el pedido existe
+
 IF _id_detalle IS NULL THEN
         RAISE EXCEPTION 'Pedido con ID % no encontrado', _id_pedido;
 END IF;
 
-    -- Validar que no se está intentando cambiar al mismo estado
+
     IF _estado_actual = _nuevo_estado THEN
         RAISE NOTICE 'El pedido ya está en el estado solicitado';
 RETURN FALSE;
 END IF;
 
-    -- Validar transición lógica (no se puede marcar como no entregado después de entregado)
+
     IF _estado_actual = TRUE AND _nuevo_estado = FALSE THEN
         RAISE EXCEPTION 'No se puede cambiar un pedido entregado a no entregado';
 END IF;
 
-    -- Actualizar el estado del pedido
 UPDATE detalle_pedido
 SET entregado = _nuevo_estado
 WHERE id_detalle_pedido = _id_detalle;
@@ -76,7 +75,7 @@ DECLARE
 rec          RECORD;
     v_detalle_id BIGINT;
 BEGIN
-    -- 1) Verificar existencia y no confirmado … (sin cambios)
+
 SELECT id_detalle_pedido
 INTO   v_detalle_id
 FROM   pedido
@@ -92,7 +91,7 @@ END IF;
         RAISE EXCEPTION 'Pedido % ya fue entregado', _id_pedido;
 END IF;
 
-    -- 2) Recorrer SOLO productos físicos
+
 FOR rec IN
 SELECT pp.id_producto_servicio,
        pp.cantidad,
@@ -100,7 +99,7 @@ SELECT pp.id_producto_servicio,
 FROM   pedido_producto pp
            JOIN   producto_servicio ps USING (id_producto_servicio)
 WHERE  pp.id_pedido = _id_pedido
-  AND  ps.es_producto = TRUE          -- ← ★ solo productos
+  AND  ps.es_producto = TRUE
     LOOP
         IF rec.stock < rec.cantidad THEN
             RAISE EXCEPTION
@@ -113,7 +112,6 @@ SET    stock = stock - rec.cantidad
 WHERE  id_producto_servicio = rec.id_producto_servicio;
 END LOOP;
 
-    -- 3) Marcar detalle como entregado (trigger fija hora_entrega)
 UPDATE detalle_pedido
 SET    entregado = TRUE
 WHERE  id_detalle_pedido = v_detalle_id;
