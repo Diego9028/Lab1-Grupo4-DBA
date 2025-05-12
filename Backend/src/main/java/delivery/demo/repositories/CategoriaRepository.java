@@ -1,8 +1,7 @@
 package delivery.demo.repositories;
 
-import org.springframework.stereotype.Repository;
+import delivery.demo.entities.CategoriaEntity;
 
-@Repository
-
-public class CategoriaRepository {
+public interface CategoriaRepository {
+    public CategoriaEntity save(CategoriaEntity categoria);
 }

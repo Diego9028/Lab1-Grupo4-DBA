@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoriaEntity {
 
-    private Long id;
+    private Long id_categoria;
 
     private String nombre;
 }
