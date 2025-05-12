@@ -14,7 +14,9 @@ public class DetallePedidoEntity {
     private Long id_detalle_pedido;
 
     private boolean entregado;
+
     private Date hora_entrega;
+
     private Float calificacion;
 
 }
