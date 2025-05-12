@@ -126,6 +126,45 @@ INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
 (9, 1, 1),
 (10, 2, 3);
 
+INSERT INTO DETALLE_PEDIDO (entregado, hora_entrega, calificacion) VALUES
+(TRUE,  '2025-04-10 10:00:00', NULL),
+(FALSE, '2025-04-12 15:30:00', NULL),
+(TRUE,  '2025-04-15 11:15:00', NULL),
+(TRUE,  '2025-04-18 09:45:00', NULL),
+(FALSE, '2025-04-21 13:20:00', NULL),
+(TRUE,  '2025-04-25 17:00:00', NULL),
+(FALSE, '2025-04-28 12:30:00', NULL),
+(TRUE,  '2025-05-02 14:00:00', NULL),
+(TRUE,  '2025-05-05 16:45:00', NULL),
+(FALSE, '2025-05-08 18:15:00', NULL);
+
+INSERT INTO PEDIDO (hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
+('2025-04-10 09:00:00', 1, 6, 1, 2, 1),
+('2025-04-12 14:00:00', 2, 7, 2, 3, 2),
+('2025-04-15 10:30:00', 3, 8, 3, 4, 3),
+('2025-04-18 08:45:00', 1, 9, 4, 5, 4),
+('2025-04-21 12:15:00', 2,10, 5, 6, 1),
+('2025-04-25 16:00:00', 3,11, 6, 7, 2),
+('2025-04-28 11:30:00', 1,12, 7, 8, 3),
+('2025-05-02 13:00:00', 2,13, 8, 9, 4),
+('2025-05-05 15:45:00', 3,14, 9,10, 1),
+('2025-05-08 17:15:00', 1,15,10, 1, 2);
+
+INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
+(11, 3, 2),
+(11, 6, 1),
+(12, 7, 1),
+(13, 1, 3),
+(14, 4, 2),
+(15, 5, 1),
+(16, 2, 1),
+(16, 9, 2),
+(17, 8, 3),
+(18, 10, 1),
+(19, 6, 2),
+(20, 7, 1),
+(20, 3, 1);
+
 
 
 UPDATE DETALLE_PEDIDO
