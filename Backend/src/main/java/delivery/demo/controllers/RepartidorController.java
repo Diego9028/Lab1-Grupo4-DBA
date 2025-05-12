@@ -1,11 +1,9 @@
 package delivery.demo.controllers;
 
+import delivery.demo.entities.RepartidorEntity;
 import delivery.demo.services.RepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,5 +24,20 @@ public class RepartidorController {
     @GetMapping("/desempenios")
     public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
         return repartidorService.obtenerDesempenoPorRepartidor();
+    }
+
+    @GetMapping("/todos")
+    public List<RepartidorEntity> obtenerTodos() {
+        return repartidorService.obtenerTodos();
+    }
+
+    @PutMapping("/actualizar")
+    public void actualizarRepartidor(@RequestBody RepartidorEntity repartidor) {
+        repartidorService.update(repartidor);
+    }
+
+    @PostMapping("/crear")
+    public void crearRepartidor(@RequestBody RepartidorEntity repartidor) {
+        repartidorService.crearRepartidor(repartidor);
     }
 }

@@ -1,5 +1,6 @@
 package delivery.demo.repositories;
 
+import delivery.demo.entities.RepartidorEntity;
 import org.sql2o.Sql2o;
 import org.springframework.stereotype.Repository;
 
@@ -70,4 +71,41 @@ public class RepartidorRepositoryImp {
                     .asList();
         }
     }
+
+    public List<RepartidorEntity> obtenerTodos() {
+        String sql = "SELECT id_repartidor AS id, nombre, id_empresa_asociada AS idEmpresaAsociada FROM REPARTIDOR";
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(RepartidorEntity.class);
+        }
+    }
+
+    public void update(RepartidorEntity repartidor) {
+        String sql = """
+        UPDATE REPARTIDOR
+        SET nombre = :nombre,
+            id_empresa_asociada = :idEmpresaAsociada
+        WHERE id_repartidor = :id
+    """;
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id", repartidor.getId())
+                    .addParameter("nombre", repartidor.getNombre())
+                    .addParameter("idEmpresaAsociada", repartidor.getIdEmpresaAsociada())
+                    .executeUpdate();
+        }
+    }
+
+    public void crearRepartidor(RepartidorEntity repartidor) {
+        String sql = "INSERT INTO REPARTIDOR (nombre, id_empresa_asociada) VALUES (:nombre, :idEmpresaAsociada)";
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("nombre", repartidor.getNombre())
+                    .addParameter("idEmpresaAsociada", repartidor.getIdEmpresaAsociada())
+                    .executeUpdate();
+        }
+    }
+
 }
