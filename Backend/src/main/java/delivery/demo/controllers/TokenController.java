@@ -26,11 +26,10 @@ public class TokenController {
         return ResponseEntity.ok(tokenSevice.login(request));
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh")
     public TokenResponse refreshToken(
             @RequestHeader(HttpHeaders.AUTHORIZATION) final String authentication
     ) {
         return tokenSevice.refreshToken(authentication);
     }
-
 }

@@ -21,4 +21,12 @@ public class DetallePedidoService {
         return detallePedidoRepository.update(detalle);
     }
 
+    public DetallePedidoEntity obtenerDetallePedidoPorId(Long id) {
+        return detallePedidoRepository.obtenerDetallePedidoPorId(id);
+    }
+
+    public void eliminarDetallePedido(Long id) {
+        detallePedidoRepository.delete(id);
+    }
+
 }

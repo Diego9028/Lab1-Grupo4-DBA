@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cliente")
-@CrossOrigin
 @RequiredArgsConstructor
 public class ClienteController {
 
@@ -32,7 +31,8 @@ public class ClienteController {
         return clienteService.findByCorreo(correo);
     }
 
-
-
-
+    @DeleteMapping("/eliminar/{id_cliente}")
+    public void eliminarCliente(@PathVariable Long id_cliente) {
+        clienteService.delete(id_cliente);
+    }
 }

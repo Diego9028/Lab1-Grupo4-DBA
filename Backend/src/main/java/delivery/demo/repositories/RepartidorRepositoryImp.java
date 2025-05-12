@@ -1,5 +1,6 @@
 package delivery.demo.repositories;
 
+import delivery.demo.entities.RepartidorEntity;
 import org.sql2o.Sql2o;
 import org.springframework.stereotype.Repository;
 
@@ -18,27 +19,30 @@ public class RepartidorRepositoryImp {
     //5 Obtener los 3 repartidores con mejor rendimiento (por entregas y promedio de calificación).
     public List<Map<String, Object>> obtenerTop3Repartidores() {
         String sql = """
-            SELECT
-              r.id_repartidor,
-              r.nombre,
-              COALESCE(e.entregas, 0) AS total_entregas,
-              COALESCE(c.promedio, 0) AS promedio_puntuacion
-            FROM REPARTIDOR r
-            LEFT JOIN (
-              SELECT
-                p.id_repartidor,
-                COUNT(*) AS entregas
-              FROM PEDIDO p
-              INNER JOIN DETALLE_PEDIDO d ON p.id_detalle_pedido = d.id_detalle_pedido
-              WHERE d.entregado = TRUE
-              GROUP BY p.id_repartidor
-            ) e ON r.id_repartidor = e.id_repartidor
-            LEFT JOIN CALIFICACION c ON r.id_repartidor = c.id_repartidor
-            ORDER BY
-              total_entregas DESC,
-              promedio_puntuacion DESC
-            LIMIT 3;
-        """;
+                    SELECT
+                      r.id_repartidor,
+                      r.nombre,
+                      COALESCE(e.entregas, 0) AS total_entregas,
+                      COALESCE(c.promedio, 0) AS promedio_puntuacion
+                    FROM REPARTIDOR r
+                    LEFT JOIN (
+                      SELECT
+                        p.id_repartidor,
+                        COUNT(*) AS entregas
+                      FROM PEDIDO p
+                      INNER JOIN DETALLE_PEDIDO d ON p.id_detalle_pedido = d.id_detalle_pedido
+                      WHERE d.entregado = TRUE 
+                        AND p.deleted_at IS NULL
+                        AND d.deleted_at IS NULL
+                      GROUP BY p.id_repartidor
+                    ) e ON r.id_repartidor = e.id_repartidor
+                    LEFT JOIN CALIFICACION c ON r.id_repartidor = c.id_repartidor
+                    WHERE r.deleted_at IS NULL
+                    ORDER BY
+                      total_entregas DESC,
+                      promedio_puntuacion DESC
+                    LIMIT 3;
+                """;
 
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -50,19 +54,22 @@ public class RepartidorRepositoryImp {
     //Desempeño por repartidor
     public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
         String sql = """
-        SELECT\s
-          r.id_repartidor,
-          r.nombre,
-          c.total_puntos,
-          c.total_pedidos,
-          c.promedio
-        FROM\s
-          REPARTIDOR r
-        JOIN\s
-          CALIFICACION c ON r.id_repartidor = c.id_repartidor
-        ORDER BY\s
-          c.total_puntos DESC;
-    """;
+                    SELECT\s
+                      r.id_repartidor,
+                      r.nombre,
+                      c.total_puntos,
+                      c.total_pedidos,
+                      c.promedio
+                    FROM\s
+                      REPARTIDOR r
+                    JOIN\s
+                      CALIFICACION c ON r.id_repartidor = c.id_repartidor
+                    WHERE\s 
+                      r.deleted_at IS NULL
+                      AND c.deleted_at IS NULL
+                    ORDER BY\s
+                      c.total_puntos DESC;
+                """;
 
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -70,4 +77,52 @@ public class RepartidorRepositoryImp {
                     .asList();
         }
     }
+
+    public List<RepartidorEntity> obtenerTodos() {
+        String sql = """
+                    SELECT * FROM REPARTIDOR
+                    WHERE deleted_at IS NULL
+                """;
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(RepartidorEntity.class);
+        }
+    }
+
+    public void update(RepartidorEntity repartidor) {
+        String sql = """
+                    UPDATE REPARTIDOR
+                    SET nombre = :nombre,
+                        id_empresa_asociada = :idEmpresaAsociada
+                    WHERE id_repartidor = :id
+                    AND deleted_at IS NULL
+                """;
+
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id", repartidor.getId_repartidor())
+                    .addParameter("nombre", repartidor.getNombre())
+                    .addParameter("idEmpresaAsociada", repartidor.getId_empresa_asociada())
+                    .executeUpdate();
+        }
+    }
+
+    public RepartidorEntity crearRepartidor(RepartidorEntity repartidor) {
+        String sql = """
+                INSERT INTO REPARTIDOR (nombre, id_empresa_asociada)
+                VALUES (:nombre, :idEmpresaAsociada)
+                RETURNING id_repartidor
+                """;
+        try (org.sql2o.Connection con = sql2o.open()) {
+            Long id = con.createQuery(sql)
+                    .addParameter("nombre", repartidor.getNombre())
+                    .addParameter("idEmpresaAsociada", repartidor.getId_empresa_asociada())
+                    .executeUpdate()
+                    .getKey(Long.class);
+            repartidor.setId_repartidor(id);
+            return repartidor;
+        }
+    }
+
 }

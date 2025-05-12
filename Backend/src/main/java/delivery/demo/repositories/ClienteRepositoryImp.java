@@ -35,6 +35,11 @@ public class ClienteRepositoryImp implements ClienteRepository {
                     JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
                     JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
                     WHERE dp.entregado = TRUE
+                    AND c.deleted_at   IS NULL
+                    AND p.deleted_at   IS NULL
+                    AND dp.deleted_at  IS NULL
+                    AND pp.deleted_at  IS NULL
+                    AND ps.deleted_at  IS NULL
                     GROUP BY c.id_cliente, c.nombre, c.direccion, c.correo, c.password
                     ORDER BY SUM(ps.precio * pp.cantidad) DESC
                     LIMIT 1
@@ -72,6 +77,11 @@ public class ClienteRepositoryImp implements ClienteRepository {
                     JOIN PEDIDO_PRODUCTO pp ON p.id_pedido = pp.id_pedido
                     JOIN PRODUCTO_SERVICIO ps ON pp.id_producto_servicio = ps.id_producto_servicio
                     WHERE dp.entregado = TRUE
+                    AND c.deleted_at   IS NULL
+                   AND p.deleted_at   IS NULL
+                   AND dp.deleted_at  IS NULL
+                   AND pp.deleted_at  IS NULL
+                   AND ps.deleted_at  IS NULL
                     GROUP BY c.id_cliente, c.direccion, c.correo
                     ORDER BY totalGastado DESC
                     LIMIT 1
@@ -89,7 +99,10 @@ public class ClienteRepositoryImp implements ClienteRepository {
 
     @Override
     public Optional<ClienteEntity> findByCorreo(String correo) {
-        String sql = "SELECT * FROM CLIENTE WHERE correo = :correo";
+        String sql = """
+                SELECT * FROM CLIENTE 
+                WHERE correo = :correo AND deleted_at IS NULL
+                """;
 
         try (Connection con = sql2o.open()) {
             ClienteEntity cliente = con.createQuery(sql)
@@ -104,7 +117,10 @@ public class ClienteRepositoryImp implements ClienteRepository {
 
     @Override
     public List<ClienteEntity> findAllClientes() {
-        String sql = "SELECT * FROM CLIENTE";
+        String sql = """
+                SELECT * FROM CLIENTE
+                WHERE deleted_at IS NULL
+                """;
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -131,6 +147,20 @@ public class ClienteRepositoryImp implements ClienteRepository {
 
             cliente.setId_cliente(id);
             return cliente;
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        String sql = """
+                    UPDATE CLIENTE
+                    SET deleted_at = NOW()
+                    WHERE id_cliente = :id
+                """;
+        try (Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id", id)
+                    .executeUpdate();
         }
     }
 }

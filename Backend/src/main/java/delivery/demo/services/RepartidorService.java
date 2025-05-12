@@ -1,5 +1,6 @@
 package delivery.demo.services;
 
+import delivery.demo.entities.RepartidorEntity;
 import delivery.demo.repositories.RepartidorRepositoryImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,17 @@ public class RepartidorService {
 
     public List<Map<String, Object>> obtenerDesempenoPorRepartidor() {
         return repartidorRepositoryImp.obtenerDesempenoPorRepartidor();
+    }
+
+    public List<RepartidorEntity> obtenerTodos() {
+        return repartidorRepositoryImp.obtenerTodos();
+    }
+
+    public void update(RepartidorEntity repartidor) {
+        repartidorRepositoryImp.update(repartidor);
+    }
+
+    public RepartidorEntity crearRepartidor(RepartidorEntity repartidor) {
+        return repartidorRepositoryImp.crearRepartidor(repartidor);
     }
 }

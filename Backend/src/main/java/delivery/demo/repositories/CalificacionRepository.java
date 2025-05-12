@@ -16,36 +16,35 @@ public class CalificacionRepository {
         this.sql2o = sql2o;
     }
 
+
     public CalificacionEntity crear(CalificacionEntity calificacion) {
         String sql = """
             INSERT INTO CALIFICACION (total_puntos, total_pedidos, promedio, id_repartidor)
             VALUES (:tp, :td, :pm, :idr)
-            RETURNING id_calificacion, total_puntos, total_pedidos, promedio, id_repartidor
+            RETURNING id_calificacion
         """;
 
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    .addParameter("tp", calificacion.getTotalPuntos())
-                    .addParameter("td", calificacion.getTotalPedidos())
+            Integer id = con.createQuery(sql)
+                    .addParameter("tp", calificacion.getTotal_puntos())
+                    .addParameter("td", calificacion.getTotal_pedidos())
                     .addParameter("pm", calificacion.getPromedio())
-                    .addParameter("idr", calificacion.getIdRepartidor())
-                    .executeAndFetchFirst(CalificacionEntity.class);
+                    .addParameter("idr", calificacion.getId_repartidor())
+                    .executeUpdate()
+                    .getKey(Integer.class);
+            calificacion.setId_calificacion(id);
+            return calificacion;
         }
     }
 
     public List<CalificacionEntity> getAll() {
         String sql = """
-        SELECT
-            id_calificacion AS idCalificacion,
-            total_puntos AS totalPuntos,
-            total_pedidos AS totalPedidos,
-            promedio,
-            id_repartidor AS idRepartidor
-        FROM CALIFICACION
-    """;
-
+        SELECT * FROM CALIFICACION
+        WHERE deleted_at IS NULL
+        """;
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql).executeAndFetch(CalificacionEntity.class);
+            return con.createQuery(sql)
+                            .executeAndFetch(CalificacionEntity.class);
         }
     }
 
@@ -56,13 +55,13 @@ public class CalificacionRepository {
             SET total_puntos = :tp,
                 total_pedidos = :td,
                 promedio = :pm
-            WHERE id_calificacion = :id
+            WHERE id_calificacion = :id AND deleted_at IS NULL
         """;
 
         try (Connection con = sql2o.open()) {
             int updatedRows = con.createQuery(sql)
-                    .addParameter("tp", calificacion.getTotalPuntos())
-                    .addParameter("td", calificacion.getTotalPedidos())
+                    .addParameter("tp", calificacion.getTotal_puntos())
+                    .addParameter("td", calificacion.getTotal_pedidos())
                     .addParameter("pm", calificacion.getPromedio())
                     .addParameter("id", id)
                     .executeUpdate()
@@ -72,7 +71,11 @@ public class CalificacionRepository {
     }
 
     public void delete(Integer id) {
-        String sql = "DELETE FROM CALIFICACION WHERE id_calificacion = :id";
+        String sql = """
+        UPDATE CALIFICACION
+        SET deleted_at = NOW()
+        WHERE id_calificacion = :id AND deleted_at IS NULL
+    """;
 
         try (Connection con = sql2o.open()) {
             con.createQuery(sql)

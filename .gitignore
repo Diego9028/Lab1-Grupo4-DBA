@@ -33,3 +33,4 @@ Frontend/*.sw?
 
 # Backend
 Backend/.env
+Backend/target/

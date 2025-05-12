@@ -34,4 +34,8 @@ public class ClienteService {
     public ClienteEntity save(ClienteEntity cliente) {
         return clienteRepository.save(cliente);
     }
+
+    public void delete(Long id) {
+        clienteRepository.delete(id);
+    }
 }

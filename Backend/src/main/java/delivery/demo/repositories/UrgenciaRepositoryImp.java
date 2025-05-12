@@ -31,6 +31,9 @@ public class UrgenciaRepositoryImp {
               MEDIO_PAGO mp ON p.id_medio_pago = mp.id_medio_pago
             WHERE\s
               u.tipo = 'Alta'
+            AND p.deleted_at IS NULL
+            AND u.deleted_at IS NULL
+            AND mp.deleted_at IS NULL
             GROUP BY\s
               mp.id_medio_pago, mp.tipo
             ORDER BY\s
@@ -45,15 +48,19 @@ public class UrgenciaRepositoryImp {
     }
 
     // Crear una nueva urgencia
-    public void create(UrgenciaEntity urgencia) {
+    public UrgenciaEntity create(UrgenciaEntity urgencia) {
         String sql = """
-            INSERT INTO URGENCIA (tipo)
-            VALUES (:tipo);
-        """;
+        INSERT INTO URGENCIA (tipo)
+        VALUES (:tipo)
+        RETURNING id_urgencia;
+    """;
         try (org.sql2o.Connection con = sql2o.open()) {
-            con.createQuery(sql)
+            Long id = con.createQuery(sql)
                     .addParameter("tipo", urgencia.getTipo())
-                    .executeUpdate();
+                    .executeUpdate()
+                    .getKey(Long.class);
+            urgencia.setId_urgencia(id);
+            return urgencia;
         }
     }
 
@@ -62,7 +69,8 @@ public class UrgenciaRepositoryImp {
         String sql = """
             UPDATE URGENCIA
             SET tipo = :tipo
-            WHERE id_urgencia = :id_urgencia;
+            WHERE id_urgencia = :id_urgencia
+            AND deleted_at IS NULL;
         """;
         try (org.sql2o.Connection con = sql2o.open()) {
             con.createQuery(sql)
@@ -75,7 +83,8 @@ public class UrgenciaRepositoryImp {
     // Obtener todas las urgencias
     public List<UrgenciaEntity> getAll() {
         String sql = """
-            SELECT * FROM URGENCIA;
+            SELECT * FROM URGENCIA
+            WHERE deleted_at IS NULL;
         """;
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -86,8 +95,10 @@ public class UrgenciaRepositoryImp {
     // Eliminar una urgencia
     public void delete(Long idUrgencia) {
         String sql = """
-            DELETE FROM URGENCIA
-            WHERE id_urgencia = :id_urgencia;
+            UPDATE URGENCIA
+            SET deleted_at = NOW()
+            WHERE id_urgencia = :id_urgencia
+              AND deleted_at IS NULL;
         """;
         try (org.sql2o.Connection con = sql2o.open()) {
             con.createQuery(sql)

@@ -65,4 +65,16 @@ public class PedidoService {
 
         return jdbc.queryForObject(sql, params, Boolean.class);
     }
+
+    public List<Map<String, Object>> obtenerTodosLosPedidos() {
+        return pedidoRepositoryImp.obtenerTodosLosPedidos();
+    }
+
+    public void actualizarPedido(Long id, Map<String, Object> campos) {
+        pedidoRepositoryImp.actualizarPedido(id, campos);
+    }
+
+    public void eliminarPedido(Long id) {
+        pedidoRepositoryImp.eliminarPedido(id);
+    }
 }

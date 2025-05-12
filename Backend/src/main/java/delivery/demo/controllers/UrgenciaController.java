@@ -35,7 +35,7 @@ public class UrgenciaController {
     }
 
     // Obtener todas las urgencias
-    @GetMapping("/todos")
+    @GetMapping("/")
     public List<UrgenciaEntity> getAllUrgencias() {
         return urgenciaService.getAllUrgencias();
     }

@@ -17,4 +17,6 @@ public interface ClienteRepository {
 
     ClienteEntity save(ClienteEntity cliente);
 
+    void delete(Long id);
+
 }

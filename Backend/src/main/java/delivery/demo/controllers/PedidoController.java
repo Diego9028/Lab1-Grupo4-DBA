@@ -66,5 +66,22 @@ public class PedidoController {
         boolean resultado = pedidoService.cambiarEstadoPedidoPorFuncion(idPedido, nuevoEstado);
 
         return ResponseEntity.ok(resultado ? idPedido : -1L);
-    }   
+    }
+
+    @GetMapping("/")
+    public List<Map<String, Object>> obtenerTodosLosPedidos() {
+        return pedidoService.obtenerTodosLosPedidos();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarPedido(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+        pedidoService.actualizarPedido(id, campos);
+        return ResponseEntity.ok("Pedido actualizado correctamente");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarPedido(@PathVariable Long id) {
+        pedidoService.eliminarPedido(id);
+        return ResponseEntity.ok("Pedido eliminado correctamente");
+    }
 }

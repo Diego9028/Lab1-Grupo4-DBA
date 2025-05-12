@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -24,5 +25,5 @@ public class ClienteEntity {
 
     private String password;
 
-    private List<TokenEntity> tokens;
+    private LocalDate deleted_at;
 }

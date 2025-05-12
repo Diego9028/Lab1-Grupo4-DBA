@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +17,5 @@ public class DetallePedidoEntity {
     private boolean entregado;
     private Date hora_entrega;
     private Float calificacion;
-
+    private LocalDate deleted_at;
 }

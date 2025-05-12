@@ -25,5 +25,14 @@ public class DetallePedidoController {
         return detallePedidoService.update(detalle);
     }
 
+    @GetMapping("/{id}")
+    public DetallePedidoEntity obtenerDetallePedidoPorId(@RequestParam Long id) {
+        return detallePedidoService.obtenerDetallePedidoPorId(id);
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public void eliminarDetallePedido(@PathVariable Long id) {
+        detallePedidoService.eliminarDetallePedido(id);
+    }
 }
 

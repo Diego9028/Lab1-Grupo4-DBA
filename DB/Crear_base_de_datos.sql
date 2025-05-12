@@ -92,14 +92,20 @@ CREATE TABLE PEDIDO_PRODUCTO (
   FOREIGN KEY (id_producto_servicio) REFERENCES PRODUCTO_SERVICIO(id_producto_servicio)
 );
 
-CREATE TABLE TOKEN_ENTITY (
-  id SERIAL PRIMARY KEY,
-  token VARCHAR(255) NOT NULL,
-  token_type VARCHAR(50) NOT NULL,
-  revoked BOOLEAN NOT NULL,
-  expired BOOLEAN NOT NULL,
-  cliente_id BIGINT REFERENCES CLIENTE(id_cliente)
-);
+-- Agregacion Soft_delete
+ALTER TABLE CLIENTE ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE EMPRESA_ASOCIADA ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE DETALLE_PEDIDO ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE MEDIO_PAGO ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE CATEGORIA ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE URGENCIA ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE REPARTIDOR ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE PRODUCTO_SERVICIO ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE PEDIDO ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE CALIFICACION ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE NOTIFICACION ADD COLUMN deleted_at TIMESTAMP;
+ALTER TABLE PEDIDO_PRODUCTO ADD COLUMN deleted_at TIMESTAMP;
+
 
 -- Funciones y triggers
 
@@ -128,7 +134,8 @@ BEGIN
     RAISE EXCEPTION 'Error: El ID del pedido no puede ser NULL.';
   END IF;
 
-  IF NEW.id_urgencia NOT IN (SELECT id_urgencia FROM URGENCIA) THEN
+  IF NEW.id_urgencia NOT IN (SELECT id_urgencia FROM URGENCIA WHERE deleted_at IS NULL
+) THEN
     RAISE EXCEPTION 'Error: La urgencia del pedido no es válida.';
   END IF;
 
@@ -165,7 +172,8 @@ BEGIN
   SELECT p.id_repartidor
   INTO   v_repartidor
   FROM   PEDIDO p
-  WHERE  p.id_detalle_pedido = NEW.id_detalle_pedido;
+  WHERE  p.id_detalle_pedido = NEW.id_detalle_pedido
+  AND p.deleted_at IS NULL;
 
   IF v_repartidor IS NULL THEN
     RAISE EXCEPTION 'Pedido no encontrado para detalle %', NEW.id_detalle_pedido;
@@ -236,7 +244,8 @@ BEGIN
   SELECT hora_pedido
   INTO   v_hora_pedido
   FROM   PEDIDO
-  WHERE  id_detalle_pedido = NEW.id_detalle_pedido;
+  WHERE  id_detalle_pedido = NEW.id_detalle_pedido
+  AND deleted_at IS NULL;
 
   IF v_hora_pedido IS NOT NULL
      AND NEW.entregado = TRUE
