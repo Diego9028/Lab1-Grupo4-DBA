@@ -1,5 +1,6 @@
 package delivery.demo.repositories;
 
+import delivery.demo.entities.UrgenciaEntity;
 import org.sql2o.Sql2o;
 import org.springframework.stereotype.Repository;
 
@@ -40,6 +41,58 @@ public class UrgenciaRepositoryImp {
             return con.createQuery(sql)
                     .executeAndFetchTable()
                     .asList();
+        }
+    }
+
+    // Crear una nueva urgencia
+    public void create(UrgenciaEntity urgencia) {
+        String sql = """
+            INSERT INTO URGENCIA (tipo)
+            VALUES (:tipo);
+        """;
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("tipo", urgencia.getTipo())
+                    .executeUpdate();
+        }
+    }
+
+    // Actualizar una urgencia existente
+    public void update(UrgenciaEntity urgencia) {
+        String sql = """
+            UPDATE URGENCIA
+            SET tipo = :tipo
+            WHERE id_urgencia = :id_urgencia;
+        """;
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("tipo", urgencia.getTipo())
+                    .addParameter("id_urgencia", urgencia.getId_urgencia())
+                    .executeUpdate();
+        }
+    }
+
+    // Obtener todas las urgencias
+    public List<UrgenciaEntity> getAll() {
+        String sql = """
+            SELECT * FROM URGENCIA;
+        """;
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(UrgenciaEntity.class);
+        }
+    }
+
+    // Eliminar una urgencia
+    public void delete(Long idUrgencia) {
+        String sql = """
+            DELETE FROM URGENCIA
+            WHERE id_urgencia = :id_urgencia;
+        """;
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id_urgencia", idUrgencia)
+                    .executeUpdate();
         }
     }
 }

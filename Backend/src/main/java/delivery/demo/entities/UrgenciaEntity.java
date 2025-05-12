@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UrgenciaEntity {
-    private Long id;
+    private Long id_urgencia;
 
     private String tipo;
 }
