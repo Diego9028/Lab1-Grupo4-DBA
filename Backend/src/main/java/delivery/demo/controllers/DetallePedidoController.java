@@ -25,5 +25,9 @@ public class DetallePedidoController {
         return detallePedidoService.update(detalle);
     }
 
+    @GetMapping("/{id}")
+    public DetallePedidoEntity obtenerDetallePedidoPorId(@RequestParam Long id) {
+        return detallePedidoService.obtenerDetallePedidoPorId(id);
+    }
 }
 

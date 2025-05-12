@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DetallePedidoRepository {
@@ -44,6 +45,25 @@ public class DetallePedidoRepository {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
+        }
+    }
+
+    public DetallePedidoEntity obtenerDetallePedidoPorId(Long id) {
+
+        String sql = """
+            SELECT * FROM detalle_pedido WHERE id_detalle_pedido = :id
+            """;
+
+        try (Connection con = sql2o.open()) {
+            DetallePedidoEntity detallePedido = con.createQuery(sql)
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(DetallePedidoEntity.class);
+            return Optional.ofNullable(detallePedido)
+                    .orElseThrow(() -> new RuntimeException("No se encontró el detalle de pedido con id: " + id));
+        } catch (Exception e) {
+            // Manejo de excepciones
+            e.printStackTrace();
+            return null;
         }
     }
 
