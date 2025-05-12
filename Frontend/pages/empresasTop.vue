@@ -29,7 +29,6 @@ const { $apiClient } = useNuxtApp()
 
 const fetchEmpresasTop = async () => {
   try {
-    // Asume un endpoint REST que devuelve las empresas con el campo totalEntregados
     const { data } = await $apiClient.get(`${API_ROUTES.EMPRESA}/top-volumen`)
     empresas.value = data
   } catch (error) {

@@ -36,8 +36,8 @@ const handleLogin = async () => {
             password: password.value
         })
 
-        const access_token = response.data.access_token // Obtener el token de la respuesta
-        const refresh_token = response.data.refresh_token // Obtener el token de la respuesta
+        const access_token = response.data.access_token 
+        const refresh_token = response.data.refresh_token 
 
         if (!access_token || !refresh_token) {
             alert('Error: Token no recibido')
@@ -45,7 +45,7 @@ const handleLogin = async () => {
         }
         localStorage.setItem('access_token', access_token)
         localStorage.setItem('refresh_token', refresh_token)
-        router.push('/') // Redirigir a la página principal
+        router.push('/') 
     } catch (error) {
         console.error('Error:', error)
         alert(error.response?.data?.message || 'Error al iniciar sesión')
@@ -64,12 +64,12 @@ const refreshToken = async () => {
                 Authorization: `Bearer ${refresh_token}`
             }
         })
-        const new_access_token = response.data.access_token // Obtener el nuevo token de acceso de la respuesta
+        const new_access_token = response.data.access_token 
         if (!new_access_token) {
             alert('Error: Token no recibido')
             return
         }
-        localStorage.setItem('access_token', new_access_token) // Actualizar el token en localStorage
+        localStorage.setItem('access_token', new_access_token) 
     } catch (error) {
         console.error('Error al renoval el token:', error)
     }

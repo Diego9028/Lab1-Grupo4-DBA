@@ -45,7 +45,7 @@ const handleRegister = async () => {
             password: password.value,
         })
         alert('Registro exitoso, ahora puedes iniciar sesión')
-        router.push('/login') // Redirigir al login
+        router.push('/login') 
     } catch (error) {
         console.error('Error al registrar:', error)
         alert(error.response?.data?.message || 'Error al registrar')

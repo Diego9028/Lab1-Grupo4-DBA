@@ -21,11 +21,11 @@ export const handleLogout = async (apiClient: AxiosInstance, router: Router) => 
       }
     })
 
-    // Limpiar el token del almacenamiento local
+
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
     alert('Sesión cerrada exitosamente.')
-    router.push('/login') // Redirigir al login
+    router.push('/login') 
   } catch (error) {
     console.error('Error al cerrar sesión:', error)
     alert("Error al cerrar sesión: ")

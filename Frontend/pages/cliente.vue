@@ -64,7 +64,7 @@ const buscarClientePorCorreo = async () => {
         const response = await $apiClient.get(API_ROUTES.CLIENTE + '/correo', {
             params: { correo: correo.value }
         })
-        // Asegurarse de que clientes sea siempre un array
+ 
         clientes.value = response.data ? [response.data] : []
         console.log('Cliente obtenido con el correo:', correo.value)
         console.log('Clientes obtenidos:', clientes.value)

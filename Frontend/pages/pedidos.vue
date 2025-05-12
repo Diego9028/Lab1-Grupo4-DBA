@@ -29,7 +29,7 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { useNuxtApp } from '#app'
-    import { jwtDecode } from 'jwt-decode' // Importar la librería para decodificar el token
+    import { jwtDecode } from 'jwt-decode' 
     import API_ROUTES from '../src/api-routes.js'
 
     const pedidos = ref([])
@@ -80,12 +80,10 @@
         const response = await $apiClient.get(`${API_ROUTES.PEDIDO}/cliente/${idCliente}`)
         pedidos.value = response.data
 
-        // Llama a fetchDetallePedido para cada pedido
         for (const pedido of pedidos.value) {
             await fetchDetallePedido(pedido.id_detalle_pedido);
             await fetchPedidoProducto(pedido.id_pedido);
 
-            // Calcula el precio total multiplicando el precio por la cantidad
             for (let i = 0; i < listaProductos.value.length; i++) {
                 await fetchPrecio(listaProductos.value[i]);
                 precioTotal.value += precio.value * listaCantidades.value[i];
@@ -99,20 +97,19 @@
 
     const formatDate = (timestamp) => {
     const date = new Date(timestamp)
-    return date.toLocaleDateString('es-ES') // Formato de fecha en español
+    return date.toLocaleDateString('es-ES') 
 }
 
     onMounted(() => {
-    // Obtener el token de localStorage
+
     const token = localStorage.getItem('access_token')
     if (!token) {
         alert('No estás autenticado.')
         return
     }
 
-    // Decodificar el token para obtener el idCliente
     const decodedToken = jwtDecode(token)
-    const idCliente = decodedToken.jti // Asegúrate de que el token contenga esta información
+    const idCliente = decodedToken.jti 
 
     fetchPedidos(idCliente)
 })

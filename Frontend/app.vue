@@ -9,6 +9,7 @@
         <nuxt-link to="/cliente" class="btn btn-link">Clientes</nuxt-link>
         <nuxt-link to="/pedidos" class="btn btn-link">Pedidos</nuxt-link>
         <nuxt-link to="/desempeno" class="btn btn-link">Desempeño</nuxt-link>
+        <nuxt-link to="/empresasTop" class="btn btn-link">Ver Empresas con Más Entregas</nuxt-link>
       </nav>
     </header>
     <main>

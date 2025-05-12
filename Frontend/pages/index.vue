@@ -1,4 +1,3 @@
-<!-- filepath: e:\Universidad\BBDDA\Lab_1\Lab1-Grupo4-DBA\Frontend\pages\index.vue -->
 <template>
     <div>
       <h1>Bienvenido al Home</h1>
