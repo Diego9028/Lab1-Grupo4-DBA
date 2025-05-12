@@ -30,6 +30,7 @@ RETURN _id_pedido;
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION cambiar_estado_pedido(
     _id_pedido BIGINT,
     _nuevo_estado BOOLEAN
@@ -69,6 +70,7 @@ WHERE id_detalle_pedido = _id_detalle;
 RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION confirmar_pedido(_id_pedido BIGINT)
 RETURNS VOID AS $$

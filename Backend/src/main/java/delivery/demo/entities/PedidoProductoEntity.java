@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PedidoProductoEntity {
 
-    private Long id;
+    private Long id_pedido;
 
-    private Long idProductoServicio;
+    private Long id_producto_servicio;
     private int cantidad;
 }

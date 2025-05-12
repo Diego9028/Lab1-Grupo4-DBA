@@ -11,9 +11,12 @@ import java.sql.Date;
 @AllArgsConstructor
 public class DetallePedidoEntity {
 
-    private Long id;
+    private Long id_detalle_pedido;
 
     private boolean entregado;
-    private Date fecha;
+
+    private Date hora_entrega;
+
+    private Float calificacion;
 
 }
