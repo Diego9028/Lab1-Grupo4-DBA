@@ -1,12 +1,29 @@
 package delivery.demo.controllers;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import delivery.demo.entities.DetallePedidoEntity;
+import delivery.demo.services.DetallePedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/detallePedido")
 @CrossOrigin
-
 public class DetallePedidoController {
+
+    @Autowired
+    private DetallePedidoService detallePedidoService;
+
+    @GetMapping("/")
+    public List<DetallePedidoEntity> getAll() {
+        return detallePedidoService.getAll();
+    }
+
+    @PutMapping("/update")
+    public boolean update(@RequestBody DetallePedidoEntity detalle) {
+        return detallePedidoService.update(detalle);
+    }
+
 }
+
