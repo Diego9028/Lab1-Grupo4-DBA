@@ -54,7 +54,16 @@ INSERT INTO PRODUCTO_SERVICIO (id_producto_servicio, stock, precio, id_categoria
 (8,  30,  45.25, 3, 3, TRUE),
 (9,  90,  30.00, 4, 4, TRUE),
 (10,100,   8.00, 5, 5, TRUE),
-(11, 0, 120.00, 2, 2, FALSE);  
+(11, 0, 120.00, 2, 2, FALSE),
+(12,  25,  18.50, 1, 1, TRUE),
+(13,  10, 250.00, 2, 2, TRUE),
+(14,  75,  22.00, 3, 3, FALSE),
+(15,  50,  99.99, 4, 4, TRUE),
+(16,  60,  11.45, 5, 5, TRUE),
+(17,  35,  65.00, 1, 1, FALSE),
+(18,  80, 135.75, 2, 2, TRUE),
+(19,  45,  28.60, 3, 3, TRUE),
+(20, 100,  14.95, 4, 4, FALSE);
 
 
 -- MEDIO_PAGO
@@ -76,7 +85,22 @@ INSERT INTO DETALLE_PEDIDO (entregado, hora_entrega, calificacion) VALUES
 (FALSE, '2024-03-02 15:30:00', NULL),
 (TRUE,  '2024-03-03 11:15:00', NULL),
 (TRUE,  '2024-03-04 09:45:00', NULL),
-(FALSE, '2024-03-05 13:20:00', NULL);
+(FALSE, '2024-03-05 13:20:00', NULL),
+(TRUE,  '2024-03-22 02:00:00', NULL),
+(TRUE,  '2024-03-23 02:00:00', NULL),
+(FALSE, NULL, NULL),
+(TRUE,  '2024-03-25 02:00:00', NULL),
+(TRUE, '2024-03-26 02:00:00', NULL),
+(FALSE, NULL, NULL),
+(FALSE, NULL, NULL),
+(FALSE, NULL, NULL),
+(TRUE,  '2024-03-30 02:00:00', NULL),
+(FALSE, NULL, NULL),
+(TRUE,  '2024-03-27 02:00:00', NULL),
+(FALSE, NULL, NULL),
+(TRUE,  '2024-03-29 03:00:00', NULL),
+(TRUE,  '2024-03-30 04:00:00', NULL),
+(FALSE, NULL, NULL);
 
 -- PEDIDO
 INSERT INTO PEDIDO (hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
@@ -85,11 +109,21 @@ INSERT INTO PEDIDO (hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, 
 ('2024-03-03 10:30:00', 3, 3, 3, 3, 3),
 ('2024-03-04 08:45:00', 1, 4, 4, 4, 4),
 ('2024-03-05 12:15:00', 2, 5, 5, 5, 1),
-('2024-03-06 11:20:00', 3, 1, 6, 6, 2),
-('2024-03-07 16:10:00', 1, 2, 7, 7, 3),
-('2024-03-08 17:05:00', 2, 3, 8, 8, 4),
-('2024-03-09 10:50:00', 3, 4, 9, 9, 1),
-('2024-03-10 13:40:00', 1, 5, 10, 10, 2);
+('2024-03-06 11:20:00', 3, 6, 6, 6, 2),
+('2024-03-07 16:10:00', 1, 7, 7, 7, 3),
+('2024-03-08 17:05:00', 2, 8, 8, 8, 4),
+('2024-03-09 10:50:00', 3, 9, 9, 9, 1),
+('2024-03-10 13:40:00', 1, 10, 10, 10, 2),
+('2024-03-22 00:00:00', 1, 11, 8, 2, 4),
+('2024-03-23 00:00:00', 2, 12, 3, 4, 4),
+('2024-03-24 00:00:00', 3, 13, 2, 6, 3),
+('2024-03-25 00:00:00', 3, 14, 6, 10, 3),
+('2024-03-26 00:00:00', 1,15, 2, 6, 3),
+('2024-03-27 00:00:00', 3,16, 7, 8, 1),
+('2024-03-28 00:00:00', 2,17, 4, 9, 2),
+('2024-03-29 00:00:00', 1,18, 5, 1, 4),
+('2024-03-30 00:00:00', 2,19, 9, 3, 2),
+('2024-03-31 00:00:00', 1,20,10, 5, 3);
 
 -- CALIFICACION
 INSERT INTO CALIFICACION (
@@ -123,14 +157,35 @@ INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
 (7, 9, 1),
 (8, 10, 2),
 (9, 1, 1),
-(10, 2, 3);
-
+(10, 2, 3),
+(11, 3, 1),
+(11, 8, 2),
+(12, 6, 3),
+(13, 2, 1),
+(14, 12, 2),
+(15, 5, 2),
+(15, 1, 1),
+(16, 18, 3),
+(17, 20, 1),
+(18, 13, 2),
+(18, 7, 1),
+(19, 4, 1),
+(20, 10, 2),
+(20, 17, 1);
 
 
 UPDATE DETALLE_PEDIDO
-SET    calificacion = CASE id_detalle_pedido
-                        WHEN 1 THEN 1
-                        WHEN 3 THEN 3
-                        WHEN 4 THEN 4
-                      END
-WHERE  id_detalle_pedido IN (1,3,4);
+SET calificacion = CASE id_detalle_pedido
+  WHEN 1  THEN 1
+  WHEN 3  THEN 3
+  WHEN 4  THEN 4
+  WHEN 6  THEN 4
+  WHEN 7  THEN 1
+  WHEN 9  THEN 3
+  WHEN 10 THEN 2
+  WHEN 14 THEN 3
+  WHEN 16 THEN 5
+  WHEN 18 THEN 2
+END
+WHERE id_detalle_pedido IN (1, 3, 4, 6, 7, 9, 10, 14, 16, 18);
+
