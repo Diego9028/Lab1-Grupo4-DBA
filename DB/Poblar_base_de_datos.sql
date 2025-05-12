@@ -1,18 +1,17 @@
 -- Población grande para las tablas
 
 -- CLIENTE
--- CLIENTE
 INSERT INTO CLIENTE (nombre, direccion, correo, password) VALUES
-('Antonio Torres', 'Calle A, Murcia', 'cliente1@example.com', 'password1'),
-('Laura Sánchez', 'Calle B, Cartagena', 'cliente2@example.com', 'password2'),
-('José Martínez', 'Avenida C, Lorca', 'cliente3@example.com', 'password3'),
-('Elena Ruiz', 'Calle D, Molina de Segura', 'cliente4@example.com', 'password4'),
-('Carlos López', 'Plaza E, Alcantarilla', 'cliente5@example.com', 'password5'),
-('María Gómez', 'Calle F, San Javier', 'cliente6@example.com', 'password6'),
-('Miguel Díaz', 'Avenida G, Totana', 'cliente7@example.com', 'password7'),
-('Sara Romero', 'Calle H, Águilas', 'cliente8@example.com', 'password8'),
-('David Navarro', 'Calle I, Cehegín', 'cliente9@example.com', 'password9'),
-('Lucía Ortega', 'Avenida J, Cieza', 'cliente10@example.com', 'password10');
+('Antonio Torres', 'Calle A, Murcia', 'cliente1@example.com', '$2a$10$q0ZB/DYih0X6a0RptSkEW.DdwsOdKl/YGfftHJNh7WtbR/jcgg7sW'),
+('Laura Sánchez', 'Calle B, Cartagena', 'cliente2@example.com', '$2a$10$w7eN/zIxTCey26VVaOuFd.DfXDihr4rjXAN4XknP08BkxsAU5P8MK'),
+('José Martínez', 'Avenida C, Lorca', 'cliente3@example.com', '$2a$10$RBOnE3uwM.4cSbgBw0k3Ze0.hdbvVhceZ7RMq14gxgsUo6yJhxTrq'),
+('Elena Ruiz', 'Calle D, Molina de Segura', 'cliente4@example.com', '$2a$10$dM5nt.KHUupeGeyhsB57juucQCo6wZdS/iZdSnTt2cJk.D7hFDnWC'),
+('Carlos López', 'Plaza E, Alcantarilla', 'cliente5@example.com', '$2a$10$SI3H/vriOgIgOGhZxV0pCOFwv0uYhQW0Zv5hOLsOIpdKVQ32sA/jq'),
+('María Gómez', 'Calle F, San Javier', 'cliente6@example.com', '$2a$10$OTxUDN7XyDorQGkzt1NfneprKm3I437GfWmPOTE5NgrZ.bF9UCI/i'),
+('Miguel Díaz', 'Avenida G, Totana', 'cliente7@example.com', '$2a$10$YNfWObQ3tYQqx6jFo0H/ReXYtZNfdB2o/Odo3NfW3jS.uneoL52X.'),
+('Sara Romero', 'Calle H, Águilas', 'cliente8@example.com', '$2a$10$HFtu6s5gbqf/yJpbNXRtvuv3CweF7pFNrKt.wEjet3ooQ0aM6DzHO'),
+('David Navarro', 'Calle I, Cehegín', 'cliente9@example.com', '$2a$10$mOSKaq9TQOnjFMKr60Ex8OzjEsY.hJi8LCl3rm5UuuXcePKaxxS7.'),
+('Lucía Ortega', 'Avenida J, Cieza', 'cliente10@example.com', '$2a$10$ScKQMbeA9l5bfRaq6Mq1b.068J5S8IFrLm3L0E221LQdZ3F7/UXFW');
 
 -- EMPRESA_ASOCIADA
 INSERT INTO EMPRESA_ASOCIADA (id_empresa_asociada, nombre) VALUES
@@ -125,45 +124,6 @@ INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
 (8, 10, 2),
 (9, 1, 1),
 (10, 2, 3);
-
-INSERT INTO DETALLE_PEDIDO (entregado, hora_entrega, calificacion) VALUES
-(TRUE,  '2025-04-10 10:00:00', NULL),
-(FALSE, '2025-04-12 15:30:00', NULL),
-(TRUE,  '2025-04-15 11:15:00', NULL),
-(TRUE,  '2025-04-18 09:45:00', NULL),
-(FALSE, '2025-04-21 13:20:00', NULL),
-(TRUE,  '2025-04-25 17:00:00', NULL),
-(FALSE, '2025-04-28 12:30:00', NULL),
-(TRUE,  '2025-05-02 14:00:00', NULL),
-(TRUE,  '2025-05-05 16:45:00', NULL),
-(FALSE, '2025-05-08 18:15:00', NULL);
-
-INSERT INTO PEDIDO (hora_pedido, id_urgencia, id_detalle_pedido, id_repartidor, id_cliente, id_medio_pago) VALUES
-('2025-04-10 09:00:00', 1, 6, 1, 2, 1),
-('2025-04-12 14:00:00', 2, 7, 2, 3, 2),
-('2025-04-15 10:30:00', 3, 8, 3, 4, 3),
-('2025-04-18 08:45:00', 1, 9, 4, 5, 4),
-('2025-04-21 12:15:00', 2,10, 5, 6, 1),
-('2025-04-25 16:00:00', 3,11, 6, 7, 2),
-('2025-04-28 11:30:00', 1,12, 7, 8, 3),
-('2025-05-02 13:00:00', 2,13, 8, 9, 4),
-('2025-05-05 15:45:00', 3,14, 9,10, 1),
-('2025-05-08 17:15:00', 1,15,10, 1, 2);
-
-INSERT INTO PEDIDO_PRODUCTO (id_pedido, id_producto_servicio, cantidad) VALUES
-(11, 3, 2),
-(11, 6, 1),
-(12, 7, 1),
-(13, 1, 3),
-(14, 4, 2),
-(15, 5, 1),
-(16, 2, 1),
-(16, 9, 2),
-(17, 8, 3),
-(18, 10, 1),
-(19, 6, 2),
-(20, 7, 1),
-(20, 3, 1);
 
 
 
