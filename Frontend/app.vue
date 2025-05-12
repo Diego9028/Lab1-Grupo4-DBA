@@ -7,6 +7,7 @@
         <nuxt-link to="/login" class="btn btn-link">Iniciar Sesión</nuxt-link>
         <nuxt-link to="/register" class="btn btn-link">Registrarse</nuxt-link>
         <nuxt-link to="/cliente" class="btn btn-link">Clientes</nuxt-link>
+        <nuxt-link to="/pedidos" class="btn btn-link">Pedidos</nuxt-link>
         <nuxt-link to="/desempeno" class="btn btn-link">Desempeño</nuxt-link>
       </nav>
     </header>

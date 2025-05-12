@@ -66,5 +66,11 @@ public class PedidoController {
         boolean resultado = pedidoService.cambiarEstadoPedidoPorFuncion(idPedido, nuevoEstado);
 
         return ResponseEntity.ok(resultado ? idPedido : -1L);
-    }   
+    }
+
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<Map<String, Object>>> obtenerPedidosPorCliente(@PathVariable Long idCliente) {
+        List<Map<String, Object>> pedidos = pedidoService.obtenerPedidosPorCliente(idCliente);
+        return ResponseEntity.ok(pedidos);
+    }
 }

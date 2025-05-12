@@ -65,4 +65,10 @@ public class PedidoService {
 
         return jdbc.queryForObject(sql, params, Boolean.class);
     }
+
+    public List<Map<String, Object>> obtenerPedidosPorCliente(Long idCliente) {
+        String sql = "SELECT * FROM pedido WHERE id_cliente = :idCliente";
+        MapSqlParameterSource params = new MapSqlParameterSource("idCliente", idCliente);
+        return jdbc.queryForList(sql, params);
+    }
 }

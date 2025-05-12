@@ -9,11 +9,11 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductoServicioEntity {
-    private Long id;
+    private Long id_producto_servicio;
 
     private int stock;
     private float precio;
-    private Long idCategoria;
-    private Long idEmpresaAsociada;
+    private Long id_categoria;
+    private Long id_empresa_asociada;
     private Boolean es_producto;
 }
